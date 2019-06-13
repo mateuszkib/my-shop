@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const passport = require("passport");
 
 const config = require('./config/config');
 const db = require('./db/db');
@@ -17,6 +18,11 @@ app.use(
 );
 app.use(bodyParser.json());
 
+// Load Passport
+app.use(passport.initialize());
+require("./config/passport")(passport);
+
+// DB Connected
 db.connect(config.mongoUri);
 
 // Load routes middleware

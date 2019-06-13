@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../../config/config');
 
 //Load models
 const User = require('../../models/User');
 
 //Load validation input
 const validationInputRegister = require('../../validation/validationInputRegister');
+const validationInputLogin = require('../../validation/validationInputLogin');
 
 router.post('/register', (req, res) => {
 
@@ -76,5 +79,61 @@ router.post('/register', (req, res) => {
         });
 })
 ;
+
+router.post('/login', (req, res) => {
+
+    const {errors, isValid} = validationInputLogin(req.body);
+
+    if (!isValid) {
+        return res.json(errors);
+    }
+
+    User.findOne({email: req.body.email})
+        .then(user => {
+            if (!user) {
+                return res.json({
+                    success: false,
+                    message: 'User not found!'
+                });
+            }
+            bcrypt.compare(req.body.password, user.password)
+                .then(result => {
+                    if (result) {
+                        const payload = {
+                            id: user._id,
+                            name: user.name,
+                            email: user.email,
+                        };
+
+                        const token = jwt.sign(payload, config.secretKey, {
+                            expiresIn: '24h'
+                        });
+
+                        res.json({
+                            success: true,
+                            message: 'Authorization successful!',
+                            token
+                        })
+                    } else {
+                        return res.json({
+                            success: false,
+                            message: 'Password incorrect!'
+                        })
+                    }
+                })
+                .catch(err => {
+                    return res.json({
+                        success: false,
+                        message: 'Password incorrect!'
+                    })
+                })
+        })
+        .catch(err => {
+            return res.json({
+                success: false,
+                message: 'errorUserFind'
+            })
+        })
+});
 
 module.exports = router;
