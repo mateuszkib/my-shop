@@ -23,6 +23,9 @@ const UserSchema = new Schema({
         deletedAt: {
             type: Date,
         },
+        activatedAt: {
+            type: Date
+        },
         personalData: [PersonalData.schema],
 
     }

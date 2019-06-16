@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
+const hash = require('object-hash');
 
 //Load models
 const User = require('../../models/User');
@@ -10,6 +11,10 @@ const User = require('../../models/User');
 //Load validation input
 const validationInputRegister = require('../../validation/validationInputRegister');
 const validationInputLogin = require('../../validation/validationInputLogin');
+
+// Load mail functions and objects
+const sendMail = require('../../mailFunctions/sendMail');
+const activateLink = require('../../mails/activateLink');
 
 router.post('/register', (req, res) => {
 
@@ -54,12 +59,19 @@ router.post('/register', (req, res) => {
                 })
             } else {
                 bcrypt.genSalt(saltRounds, (err, salt) => {
-                    bcrypt.hash(req.body.password, salt, (err, hash) => {
-                        newUser.password = hash;
+                    bcrypt.hash(req.body.password, salt, (err, hashPassword) => {
+                        newUser.password = hashPassword;
 
                         newUser.save()
                             .then(user => {
-                                return res.json({
+                                
+                                const urlLinkActivation = config.url + "/activate/" + user._id + "-" + hash(user.name + config.salt);
+                                const subject = activateLink.subject.replace(/<SITENAME>/g, config.sitename);
+                                const body = activateLink.body.replace(/<URL_ACTIVATION>/g, urlLinkActivation).replace(/<SITENAME>/g, config.sitename);
+
+                                sendMail.send(user.email, subject, body);
+
+                                res.json({
                                     success: true,
                                     user
                                 });
@@ -93,7 +105,7 @@ router.post('/login', (req, res) => {
             if (!user) {
                 return res.json({
                     success: false,
-                    message: 'User not found!'
+                    email: 'User not found!'
                 });
             }
             bcrypt.compare(req.body.password, user.password)
@@ -117,14 +129,14 @@ router.post('/login', (req, res) => {
                     } else {
                         return res.json({
                             success: false,
-                            message: 'Password incorrect!'
+                            password: 'Password incorrect!'
                         })
                     }
                 })
                 .catch(err => {
                     return res.json({
                         success: false,
-                        message: 'Password incorrect!'
+                        password: 'errorComparePassword!'
                     })
                 })
         })
