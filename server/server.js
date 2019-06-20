@@ -9,6 +9,7 @@ const PORT = 3000;
 
 // Load routes
 const auth = require('./routes/auth/auth');
+const user = require('./routes/public/users/users');
 
 // Body parser middleware
 app.use(
@@ -27,6 +28,7 @@ db.connect(config.mongoUri);
 
 // Load routes middleware
 app.use('/api/auth', auth);
+app.use('/api/user', user);
 
 app.listen(process.env.PORT || PORT, () => {
     console.log(`Server running on ${PORT} port`);

@@ -64,8 +64,8 @@ router.post('/register', (req, res) => {
 
                         newUser.save()
                             .then(user => {
-                                
-                                const urlLinkActivation = config.url + "/activate/" + user._id + "-" + hash(user.name + config.salt);
+
+                                const urlLinkActivation = config.url + "/api/user/activate/" + user._id + "-" + hash(user.name + config.salt);
                                 const subject = activateLink.subject.replace(/<SITENAME>/g, config.sitename);
                                 const body = activateLink.body.replace(/<URL_ACTIVATION>/g, urlLinkActivation).replace(/<SITENAME>/g, config.sitename);
 
@@ -73,11 +73,14 @@ router.post('/register', (req, res) => {
 
                                 res.json({
                                     success: true,
-                                    user
+                                    message: 'newAccountRegister'
                                 });
                             })
                             .catch(err => {
-                                return res.json(err);
+                                return res.json({
+                                    success: false,
+                                    message: 'errorSaveUser'
+                                });
                             })
                     });
                 });
@@ -86,7 +89,7 @@ router.post('/register', (req, res) => {
         .catch(err => {
             res.json({
                 success: false,
-                err
+                message: 'errorFoundUser'
             })
         });
 })
@@ -107,6 +110,13 @@ router.post('/login', (req, res) => {
                     success: false,
                     email: 'User not found!'
                 });
+            } else if (user.activatedAt === undefined) {
+                errors.notActivate = 'Your account is not activated!';
+
+                return res.json({
+                    success: false,
+                    errors
+                })
             }
             bcrypt.compare(req.body.password, user.password)
                 .then(result => {
