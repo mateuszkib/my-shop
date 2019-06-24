@@ -11,6 +11,14 @@ router.get('/activate/:hash', (req, res) => {
 
     User.findOne({_id: userId})
         .then(user => {
+
+            if (!user) {
+                return res.json({
+                    success: false,
+                    message: 'errorUserFind'
+                })
+            }
+
             if (splitHash[1] === hash(user.name + config.salt)) {
                 user.activatedAt = Date.now();
 

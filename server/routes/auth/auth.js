@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
 const hash = require('object-hash');
+const empty = require('is-empty');
 
 //Load models
 const User = require('../../models/User');
@@ -14,13 +15,13 @@ const validationInputLogin = require('../../validation/validationInputLogin');
 
 // Load mail functions and objects
 const sendMail = require('../../mailFunctions/sendMail');
-const activateLink = require('../../mails/activateLink');
+const activateLink = require('../../mails/en/activateLink');
 
 router.post('/register', (req, res) => {
 
-    const {errors, isValid} = validationInputRegister(req.body);
+    const {errors} = validationInputRegister(req.body);
 
-    if (!isValid) {
+    if (!empty(errors)) {
         return res.json(errors);
     }
 
@@ -97,9 +98,9 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
 
-    const {errors, isValid} = validationInputLogin(req.body);
+    const {errors} = validationInputLogin(req.body);
 
-    if (!isValid) {
+    if (!empty(errors)) {
         return res.json(errors);
     }
 
@@ -108,10 +109,10 @@ router.post('/login', (req, res) => {
             if (!user) {
                 return res.json({
                     success: false,
-                    email: 'User not found!'
+                    email: 'errorUserFind'
                 });
             } else if (user.activatedAt === undefined) {
-                errors.notActivate = 'Your account is not activated!';
+                errors.email = 'Your account is not activated!';
 
                 return res.json({
                     success: false,

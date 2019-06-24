@@ -16,6 +16,7 @@
     "concurrently": "^4.1.0",
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
+    "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.5.12",
     "nodemailer": "^6.2.1",
