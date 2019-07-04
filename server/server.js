@@ -16,9 +16,9 @@ const categories = require("./routes/private/categories");
 
 // Body parser middleware
 app.use(
-    bodyParser.urlencoded({
-        extended: false
-    })
+  bodyParser.urlencoded({
+    extended: false
+  })
 );
 app.use(bodyParser.json());
 
@@ -37,5 +37,5 @@ app.use("/api/advertisement", advertisement);
 app.use("/api/categories", categories);
 
 app.listen(process.env.PORT || PORT, () => {
-    console.log(`Server running on ${PORT} port`);
+  console.log(`Server running on ${PORT} port`);
 });
