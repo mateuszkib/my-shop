@@ -23,15 +23,15 @@ router.post(
             });
         }
 
-        Advertisement.find({ title: req.body.title }).then(adv => {
-            if (adv) {
-                errors.title = "errorTitleExist";
-                return res.json({
-                    success: false,
-                    errors
-                });
-            }
-        });
+        // Advertisement.find({ title: req.body.title }).then(adv => {
+        //     if (adv) {
+        //         errors.title = "errorTitleExist";
+        //         return res.json({
+        //             success: false,
+        //             errors
+        //         });
+        //     }
+        // });
 
         const newAdvert = new Advertisement({
             userID: req.user._id,

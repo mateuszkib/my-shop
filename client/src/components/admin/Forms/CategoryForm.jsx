@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import TextFieldGroup from "../../common/TextFieldGroup";
+import axios from "axios";
 
 const baseStyle = {
     flex: 1,
@@ -40,8 +41,7 @@ function Basic(props) {
         getInputProps,
         isDragActive,
         isDragAccept,
-        isDragReject,
-        acceptedFiles
+        isDragReject
     } = useDropzone({ multiple, accept: "image/*" });
 
     const onChange = e => {
@@ -49,15 +49,25 @@ function Basic(props) {
     };
 
     const onChangeInput = e => {
-        console.log(e);
         setName(e.target.value);
     };
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("name", name);
         console.log(formData);
+        try {
+            const res = await axios.post("/api/categories/add", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+            console.log(res);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const style = useMemo(
@@ -74,7 +84,7 @@ function Basic(props) {
         <form onSubmit={onSubmit}>
             <section className="container add-category-form">
                 <div className="row justify-content-md-center">
-                    <div class="col col-lg-6 mt-5">
+                    <div className="col col-lg-6 mt-5">
                         <h2 className="text-center">Dodawanie kategorii</h2>
                         <TextFieldGroup
                             type="text"

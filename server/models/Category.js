@@ -1,10 +1,12 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const uniqueValidator = require("mongoose-unique-validator");
 
 const CategorySchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     folder: {
         type: String,
@@ -20,4 +22,5 @@ const CategorySchema = new Schema({
     }
 });
 
-module.exports = Category = mongoose.model('categories', CategorySchema);
+module.exports = Category = mongoose.model("categories", CategorySchema);
+CategorySchema.plugin(uniqueValidator);
