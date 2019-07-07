@@ -1,8 +1,18 @@
 @import "variables";
 
 .add-category-form {
-    .col {
-        padding: 60px 20px;
-        background: $background-form;
+  .col {
+    padding: 60px 20px;
+    background: $background-form;
+  }
+
+  .flex-delete-icon {
+    display: flex;
+    align-items: center;
+
+    .icon-hover:hover {
+      cursor: pointer;
+      font-size: 20px;
     }
+  }
 }

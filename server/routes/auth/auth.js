@@ -22,7 +22,7 @@ router.post('/register', (req, res) => {
     const {errors} = validationInputRegister(req.body);
 
     if (!empty(errors)) {
-        return res.json(errors);
+        return res.json({success: false, errors: errors});
     }
 
     User.findOne({
@@ -33,7 +33,7 @@ router.post('/register', (req, res) => {
     })
         .then(user => {
             let saltRounds = 8;
-            let errors = {};
+            let errors = [];
 
             const newUser = new User({
                 name: req.body.name,
@@ -42,21 +42,20 @@ router.post('/register', (req, res) => {
             });
             if (user) {
                 if (user.email === req.body.email) {
-                    errors.email = 'User with this email exist!'
+                    errors.push({msg: 'User with this email exist!'})
                 }
                 if (user.name === req.body.name) {
-                    errors.name = 'User with this name exist!'
+                    errors.push({msg: 'User with this name exist!'})
                 }
                 return res.json({
                     success: false,
-                    message: errors
+                    errors: errors
                 })
             }
             else if (req.body.password !== req.body.passwordConfirm) {
-                errors.password = "Passwords are not the same!";
                 return res.json({
                     success: false,
-                    message: errors
+                    errors: [{msg: "Passwords are not the same!"}]
                 })
             } else {
                 bcrypt.genSalt(saltRounds, (err, salt) => {
@@ -74,13 +73,13 @@ router.post('/register', (req, res) => {
 
                                 res.json({
                                     success: true,
-                                    message: 'newAccountRegister'
+                                    errors: [{msg: 'Account successfully registered'}]
                                 });
                             })
                             .catch(err => {
                                 return res.json({
                                     success: false,
-                                    message: 'errorSaveUser'
+                                    errors: [{msg: "An error occurred during registration"}]
                                 });
                             })
                     });
@@ -90,7 +89,7 @@ router.post('/register', (req, res) => {
         .catch(err => {
             res.json({
                 success: false,
-                message: 'errorFoundUser'
+                errors: [{msg: 'An error occured during found user'}]
             })
         });
 })
@@ -101,7 +100,7 @@ router.post('/login', (req, res) => {
     const {errors} = validationInputLogin(req.body);
 
     if (!empty(errors)) {
-        return res.json(errors);
+        return res.json({success: false, errors: errors});
     }
 
     User.findOne({email: req.body.email})
@@ -109,14 +108,13 @@ router.post('/login', (req, res) => {
             if (!user) {
                 return res.json({
                     success: false,
-                    email: 'errorUserFind'
+                    errors: [{msg: 'This user doesn\'t exist'}]
                 });
             } else if (user.activatedAt === undefined) {
-                errors.email = 'Your account is not activated!';
 
                 return res.json({
                     success: false,
-                    errors
+                    errors: [{msg: 'Your account is not activated!'}]
                 })
             }
             bcrypt.compare(req.body.password, user.password)
@@ -134,27 +132,27 @@ router.post('/login', (req, res) => {
 
                         res.json({
                             success: true,
-                            message: 'Authorization successful!',
+                            msg: 'Authorization successful!',
                             token
                         })
                     } else {
                         return res.json({
                             success: false,
-                            password: 'Password incorrect!'
+                            errors: [{msg: 'Password incorrect!'}]
                         })
                     }
                 })
                 .catch(err => {
                     return res.json({
                         success: false,
-                        password: 'errorComparePassword!'
+                        errors: [{msg: 'Password are not the same!'}]
                     })
                 })
         })
         .catch(err => {
             return res.json({
                 success: false,
-                message: 'errorUserFind'
+                errors: [{msg: 'An error occurred with get user'}]
             })
         })
 });

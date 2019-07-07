@@ -1,6 +1,8 @@
-import React, { useMemo, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import React, {useMemo, useState} from "react";
+import {useDropzone} from "react-dropzone";
 import TextFieldGroup from "../../common/TextFieldGroup";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTrashAlt} from '@fortawesome/free-solid-svg-icons'
 import axios from "axios";
 
 const baseStyle = {
@@ -42,7 +44,7 @@ function Basic(props) {
         isDragActive,
         isDragAccept,
         isDragReject
-    } = useDropzone({ multiple, accept: "image/*" });
+    } = useDropzone({multiple, accept: "image/*"});
 
     const onChange = e => {
         setFile(e.target.files[0]);
@@ -57,7 +59,7 @@ function Basic(props) {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("name", name);
-        console.log(formData);
+
         try {
             const res = await axios.post("/api/categories/add", formData, {
                 headers: {
@@ -68,6 +70,10 @@ function Basic(props) {
         } catch (e) {
             console.log(e);
         }
+    };
+
+    const handleDeleteClick = () => {
+        setFile("");
     };
 
     const style = useMemo(
@@ -92,8 +98,8 @@ function Basic(props) {
                             onChange={onChangeInput}
                             placeholder="Nazwa kategorii..."
                         />
-                        <div {...getRootProps({ style })}>
-                            <input {...getInputProps()} onChange={onChange} />
+                        <div {...getRootProps({style})}>
+                            <input {...getInputProps()} onChange={onChange}/>
                             <p>
                                 Przeciągnij i upuść plik, albo kliknij aby
                                 wybrać plik
@@ -102,11 +108,20 @@ function Basic(props) {
                         <aside>
                             <h4 className="mt-2 mb-3">Załączone pliki</h4>
                             {file !== "" && (
-                                <ul className="list-group mb-3">
-                                    <li className="list-group-item">
-                                        {file.name}
-                                    </li>
-                                </ul>
+                                <>
+                                    <div className="row mb-3">
+                                        <div className="col-lg-11">
+                                            <ul className="list-group">
+                                                <li className="list-group-item">
+                                                    {file.name}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div className="col-lg-1 flex-delete-icon" onClick={handleDeleteClick}>
+                                            <FontAwesomeIcon icon={faTrashAlt} className="icon-hover" color="#ff6666"/>
+                                        </div>
+                                    </div>
+                                </>
                             )}
                         </aside>
                         <div className="text-right">

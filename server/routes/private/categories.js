@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+const empty = require('is-empty');
 const fs = require("fs");
 const config = require("../../config/config");
 const multer = require("multer");
@@ -11,7 +12,26 @@ const upload = multer({
 // Load models
 const Category = require("../../models/Category");
 
+// Load validation
+const validationInputAddCategory = require('../../validation/validationInputAddCategory');
+
 router.post("/add", upload.single("file"), (req, res) => {
+
+    const {errors} = validationInputAddCategory(req.body);
+
+    if (!empty(errors)) {
+        return res.json({
+            errors
+        })
+    }
+
+    if (!req.files) {
+        return res.json({
+            success: false,
+            message: 'errorEmptyFile'
+        })
+    }
+
     let path = config.pathCategoryImage + req.file.originalname;
     let tmp = 1;
     let fileName = req.file.originalname;
@@ -32,7 +52,7 @@ router.post("/add", upload.single("file"), (req, res) => {
     newCategory
         .save()
         .then(() => {
-            fs.rename(req.file.path, path, function(err) {
+            fs.rename(req.file.path, path, function (err) {
                 if (err) throw err;
             });
 

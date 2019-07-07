@@ -1,30 +1,30 @@
 const validator = require('validator');
 
 module.exports = function validateInputRegister(data) {
-    let errors = {};
+    let errors = [];
 
     if (!validator.isEmail(data.email)) {
-        errors.email = "The email is incorrect!"
+        errors.push({msg: 'The Email is incorrect'})
     }
 
     if (validator.isEmpty(data.email)) {
-        errors.email = "Email is required!"
+        errors.push({msg: 'Email is required'})
     }
 
     if (!validator.isLength(data.name, {min: 4, max: 32})) {
-        errors.name = "Name length must between 4 and 32 character!";
+        errors.push({msg: 'Name length must between 4 and 32 characters!'})
     }
 
     if (validator.isEmpty(data.name)) {
-        errors.name = "Name is required!";
+        errors.push({msg: 'Name is required'})
     }
 
     if (validator.isEmpty(data.password)) {
-        errors.password = "Password is required!";
+        errors.push({msg: 'Password is required'})
     }
 
     if (!validator.isLength(data.password, {min: 6, max: 32})) {
-        errors.password = "Password length must between 6 and 32 characters!";
+        errors.push({msg: 'Password length must between 6 and 32 characters!'})
     }
 
     return {
