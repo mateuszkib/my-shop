@@ -73,7 +73,7 @@ router.post('/register', (req, res) => {
 
                                 res.json({
                                     success: true,
-                                    errors: [{msg: 'Account successfully registered'}]
+                                    msg: 'We send message to your email with activated account link'
                                 });
                             })
                             .catch(err => {
@@ -114,7 +114,7 @@ router.post('/login', (req, res) => {
 
                 return res.json({
                     success: false,
-                    errors: [{msg: 'Your account is not activated!'}]
+                    errors: [{msg: 'Your account is not activated! Please check your Email'}]
                 })
             }
             bcrypt.compare(req.body.password, user.password)

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {faUser, faEnvelope, faLock} from '@fortawesome/free-solid-svg-icons'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux';
 import {register} from "../../actions/auth";
 import {setAlert} from "../../actions/alert";
@@ -29,7 +29,7 @@ const Register = ({setAlert, register, isRegister}) => {
 
     // Redirect if register success
     if (isRegister) {
-        setAlert('We send message to your email with activated account link', 'success', 10000);
+        return <Redirect to={'/login'}/>
     }
 
     return (

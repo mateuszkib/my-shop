@@ -18,7 +18,7 @@ export default function (state = initialState, action) {
         case LOGIN_SUCCESS:
             return {
                 ...state,
-                ...payload,
+                payload,
                 isAuthenticated: true
             };
         case REGISTER_FAIL:

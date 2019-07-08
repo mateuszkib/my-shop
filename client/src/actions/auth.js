@@ -11,8 +11,8 @@ export const register = (body) => async dispatch => {
         } else {
             dispatch({
                 type: REGISTER_SUCCESS,
-                payload: res.data
-            })
+            });
+            dispatch(setAlert(res.data.msg, 'success', 10000));
         }
     } catch (e) {
         dispatch({
@@ -24,17 +24,21 @@ export const register = (body) => async dispatch => {
 export const login = body => async dispatch => {
     try {
         const res = await axios.post('/api/auth/login', body);
-        console.log(res.data);
+        const {token} = res.data;
+
         if (!res.data.success) {
             res.data.errors.map(error => dispatch(setAlert(error.msg, 'danger')));
         } else {
             dispatch({
                 type: LOGIN_SUCCESS,
-                payload: res.data,
+                payload: token,
                 isAuthenticated: true
             })
         }
     } catch (e) {
-
+        dispatch({
+            type: LOGIN_FAIL,
+            isAuthenticated: false
+        })
     }
 };

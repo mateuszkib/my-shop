@@ -8,6 +8,7 @@ const multer = require("multer");
 const upload = multer({
     dest: "tmp/"
 });
+const auth = require('../../middleware/auth');
 
 // Load models
 const Category = require("../../models/Category");
@@ -15,7 +16,7 @@ const Category = require("../../models/Category");
 // Load validation
 const validationInputAddCategory = require('../../validation/validationInputAddCategory');
 
-router.post("/add", upload.single("file"), (req, res) => {
+router.post("/add", upload.single("file"), auth, (req, res) => {
 
     const {errors} = validationInputAddCategory(req.body);
 
