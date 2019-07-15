@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
 const hash = require('object-hash');
 const empty = require('is-empty');
+const gravatar = require('gravatar');
 
 //Load models
 const User = require('../../models/User');
@@ -35,10 +36,13 @@ router.post('/register', (req, res) => {
             let saltRounds = 8;
             let errors = [];
 
+            let avatar = gravatar.url(req.body.email, {s: '200', r: 'g', d: 'mm'});
+
             const newUser = new User({
                 name: req.body.name,
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                avatar
             });
             if (user) {
                 if (user.email === req.body.email) {

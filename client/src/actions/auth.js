@@ -1,6 +1,15 @@
-import {REGISTER_FAIL, REGISTER_SUCCESS, LOGIN_SUCCESS, LOGIN_FAIL} from "./types";
+import {
+    REGISTER_FAIL,
+    REGISTER_SUCCESS,
+    LOGIN_SUCCESS,
+    LOGIN_FAIL,
+    LOAD_USER,
+    ERROR_LOAD_USER,
+    LOGOUT_USER
+} from "./types";
 import axios from 'axios';
 import {setAlert} from "./alert";
+import {setAuthToken} from "../utils/setAuthToken";
 
 export const register = (body) => async dispatch => {
     try {
@@ -33,7 +42,8 @@ export const login = body => async dispatch => {
                 type: LOGIN_SUCCESS,
                 payload: token,
                 isAuthenticated: true
-            })
+            });
+            dispatch(loadUser());
         }
     } catch (e) {
         dispatch({
@@ -41,4 +51,39 @@ export const login = body => async dispatch => {
             isAuthenticated: false
         })
     }
+};
+
+export const loadUser = () => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.get('/api/private/user');
+        if (!res.data.success) {
+            dispatch({
+                type: ERROR_LOAD_USER,
+                payload: {}
+            })
+        } else {
+            dispatch({
+                type: LOAD_USER,
+                payload: res.data.user
+            })
+        }
+
+    } catch (e) {
+        dispatch({
+            type: ERROR_LOAD_USER,
+            payload: {}
+        })
+    }
+};
+
+export const logout = () => async dispatch => {
+    setAuthToken(null);
+    dispatch({
+        type: LOGOUT_USER,
+        payload: null
+    })
 };

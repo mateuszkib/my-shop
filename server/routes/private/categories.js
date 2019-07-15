@@ -16,7 +16,16 @@ const Category = require("../../models/Category");
 // Load validation
 const validationInputAddCategory = require('../../validation/validationInputAddCategory');
 
-router.post("/add", upload.single("file"), auth, (req, res) => {
+router.get("/", async (req, res) => {
+    try {
+        const categories = await Category.find();
+        res.json(categories);
+    } catch (e) {
+        console.log(e);
+    }
+});
+
+router.post("/add", upload.single("file"), (req, res) => {
 
     const {errors} = validationInputAddCategory(req.body);
 
@@ -26,10 +35,10 @@ router.post("/add", upload.single("file"), auth, (req, res) => {
         })
     }
 
-    if (!req.files) {
+    if (!req.file) {
         return res.json({
             success: false,
-            message: 'errorEmptyFile'
+            errors: [{msg: 'File is required!'}]
         })
     }
 

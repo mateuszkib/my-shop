@@ -11,14 +11,15 @@ const PORT = 3000;
 const auth = require("./routes/auth/auth");
 const user = require("./routes/public/users/users");
 const privateAdvertisementRoutes = require("./routes/private/advertisement/advertisement");
+const privateUserRoutes = require('./routes/private/user/user');
 const advertisement = require("./routes/public/advertisement/advertisement");
 const categories = require("./routes/private/categories");
 
 // Body parser middleware
 app.use(
-  bodyParser.urlencoded({
-    extended: false
-  })
+    bodyParser.urlencoded({
+        extended: false
+    })
 );
 app.use(bodyParser.json());
 
@@ -35,7 +36,8 @@ app.use("/api/user", user);
 app.use("/api/private/advertisement", privateAdvertisementRoutes);
 app.use("/api/advertisement", advertisement);
 app.use("/api/categories", categories);
+app.use("/api/private/user", privateUserRoutes);
 
 app.listen(process.env.PORT || PORT, () => {
-  console.log(`Server running on ${PORT} port`);
+    console.log(`Server running on ${PORT} port`);
 });

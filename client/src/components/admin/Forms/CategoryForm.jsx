@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useState, useEffect} from "react";
 import {useDropzone} from "react-dropzone";
 import TextFieldGroup from "../../common/TextFieldGroup";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
@@ -39,12 +39,16 @@ function Basic(props) {
 
     const multiple = false;
     const {
-        getRootProps,
-        getInputProps,
         isDragActive,
+        getRootProps,
         isDragAccept,
-        isDragReject
-    } = useDropzone({multiple, accept: "image/*"});
+        getInputProps,
+        isDragReject,
+    } = useDropzone({
+        accept: 'image/png, image/jpeg', multiple, onDrop: acceptedFiles => {
+            setFile(acceptedFiles[0]);
+        }
+    });
 
     const onChange = e => {
         setFile(e.target.files[0]);
@@ -66,7 +70,6 @@ function Basic(props) {
                     "Content-Type": "multipart/form-data"
                 }
             });
-            console.log(res);
         } catch (e) {
             console.log(e);
         }

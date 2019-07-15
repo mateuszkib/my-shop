@@ -2,11 +2,12 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {faEnvelope, faLock} from '@fortawesome/free-solid-svg-icons'
 import Alert from "../layouts/Alert";
+import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux';
 import TextFieldGroup from "../common/TextFieldGroup";
 import {login} from "../../actions/auth";
 
-const Login = ({login}) => {
+const Login = ({auth, login}) => {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -21,6 +22,10 @@ const Login = ({login}) => {
 
         login(formData);
     };
+
+    if (auth.isAuthenticated) {
+        return <Redirect to={'/'}/>
+    }
 
     return (
         <div className="container add-category-form mt-5">
@@ -48,6 +53,11 @@ const Login = ({login}) => {
 
 Login.propTypes = {
     login: PropTypes.func.isRequired,
+    auth: PropTypes.object
 };
 
-export default connect(null, {login})(Login);
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+export default connect(mapStateToProps, {login})(Login);
