@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {getCategories} from "../../actions/category";
 
-const Home = ({getCategories, categories}) => {
+const Home = ({getCategories}) => {
+
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        getCategories();
+        const res = getCategories();
+        res.then(res => setCategories(res))
     }, []);
-
-    console.log(categories);
 
     return (
         <div>
@@ -24,8 +25,4 @@ Home.propTypes = {
     getCategories: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-    categories: state.categories.categories
-});
-
-export default connect(mapStateToProps, {getCategories})(Home);
+export default connect(null, {getCategories})(Home);

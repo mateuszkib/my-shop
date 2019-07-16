@@ -7,7 +7,8 @@ export const getCategories = () => async dispatch => {
         dispatch({
             type: GET_CATEGORIES,
             payload: res.data
-        })
+        });
+        return res.data;
     } catch (e) {
 
     }
