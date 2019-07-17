@@ -8,14 +8,6 @@ const CategorySchema = new Schema({
         required: true,
         unique: true
     },
-    folder: {
-        type: String,
-        required: true
-    },
-    fileName: {
-        type: String,
-        required: true
-    },
     createdAt: {
         type: Date,
         default: Date.now

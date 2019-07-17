@@ -13,3 +13,12 @@ export const getCategories = () => async dispatch => {
 
     }
 };
+
+export const getImageCategory = (categoryID) => async dispatch => {
+    try {
+        const res = await axios.get(`/api/categories/image/${categoryID}`, {responseType: 'arraybuffer'});
+        return res.data;
+    } catch (e) {
+        console.log(e);
+    }
+};

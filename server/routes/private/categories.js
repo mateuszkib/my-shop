@@ -12,6 +12,7 @@ const auth = require('../../middleware/auth');
 
 // Load models
 const Category = require("../../models/Category");
+const Image = require('../../models/Images');
 
 // Load validation
 const validationInputAddCategory = require('../../validation/validationInputAddCategory');
@@ -42,43 +43,64 @@ router.post("/add", upload.single("file"), (req, res) => {
         })
     }
 
+    let folder = config.pathCategoryImage;
     let path = config.pathCategoryImage + req.file.originalname;
     let tmp = 1;
     let fileName = req.file.originalname;
 
     while (fs.existsSync(path)) {
-        path =
-            config.pathCategoryImage + "(" + tmp + ")" + req.file.originalname;
+        path = config.pathCategoryImage + "(" + tmp + ")" + req.file.originalname;
         fileName = "(" + tmp + ")" + req.file.originalname;
         tmp++;
     }
 
     const newCategory = new Category({
         name: req.body.name,
-        folder: path,
-        fileName
     });
 
     newCategory
         .save()
-        .then(() => {
+        .then(category => {
             fs.rename(req.file.path, path, function (err) {
                 if (err) throw err;
             });
 
+            const newImage = new Image({
+                folder,
+                fileName,
+                categoryID: category._id
+            });
+
+            newImage.save();
+
             return res.json({
                 success: true,
-                message: "successSaveCategory"
+                errors: [{msg: 'Category successfully saved'}]
             });
         })
         .catch(err => {
             console.log(err.name);
             return res.json({
                 success: false,
-                message: "errorSaveCategory",
-                errors: err.name
+                errors: [{msg: 'Error occurred while saved category'}]
             });
         });
+});
+
+router.get('/image/:categoryID', async (req, res) => {
+    try {
+        const image = await Image.find({'categoryID': req.params.categoryID}).select('folder fileName categoryID -_id');
+        const path = process.cwd() + '/' + image[0].folder + image[0].fileName;
+
+        res.setHeader("Content-type", "image/jpeg");
+        res.sendFile(path);
+
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            errors: [{msg: 'Error occurred while found image'}]
+        })
+    }
 });
 
 module.exports = router;

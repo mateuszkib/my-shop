@@ -2,20 +2,21 @@ import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {getCategories} from "../../actions/category";
+import CategoryItem from "../admin/CategoryItem";
 
 const Home = ({getCategories}) => {
 
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        const res = getCategories();
-        res.then(res => setCategories(res))
+        const listCategories = getCategories();
+        listCategories.then(res => setCategories(res))
     }, []);
 
     return (
         <div>
             {categories.map(category => (
-                <li>{category.name}</li>
+                <CategoryItem key={category._id} category={category}/>
             ))}
         </div>
     );
