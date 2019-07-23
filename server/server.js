@@ -10,10 +10,12 @@ const PORT = 3000;
 // Load routes
 const auth = require("./routes/auth/auth");
 const user = require("./routes/public/users/users");
-const privateAdvertisementRoutes = require("./routes/private/advertisement/advertisement");
-const privateUserRoutes = require('./routes/private/user/user');
 const advertisement = require("./routes/public/advertisement/advertisement");
-const categories = require("./routes/private/categories");
+const categories = require("./routes/public/categories/categories");
+
+const privateAdvertisementRoutes = require("./routes/private/advertisement/advertisement");
+const privateUserRoutes = require("./routes/private/user/user");
+const privateCategories = require("./routes/private/categories/categories");
 
 // Body parser middleware
 app.use(
@@ -31,11 +33,16 @@ require("./config/passport")(passport);
 db.connect(config.mongoUri);
 
 // Load routes middleware
+
+// Public routes
 app.use("/api/auth", auth);
 app.use("/api/user", user);
-app.use("/api/private/advertisement", privateAdvertisementRoutes);
 app.use("/api/advertisement", advertisement);
 app.use("/api/categories", categories);
+
+// Private routes
+app.use("/api/private/advertisement", privateAdvertisementRoutes);
+app.use("/api/private/categories", privateCategories);
 app.use("/api/private/user", privateUserRoutes);
 
 app.listen(process.env.PORT || PORT, () => {

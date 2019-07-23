@@ -1,13 +1,16 @@
-const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const jwt = require("jsonwebtoken");
+const config = require("../config/config");
 
-module.exports = function (req, res, next) {
-    const token = req.headers.authorization ? req.headers.authorization.split(' ') : '';
+module.exports = function(req, res, next) {
+    const token = req.headers.authorization
+        ? req.headers.authorization.split(" ")
+        : "";
     if (!token[1]) {
+        console.log("Token doesn't exist");
         return res.json({
             success: false,
-            error: 'Token doesn\'t exist'
-        })
+            error: "Token doesn't exist"
+        });
     }
 
     try {
@@ -15,6 +18,6 @@ module.exports = function (req, res, next) {
         req.user = decoded;
         next();
     } catch (e) {
-        res.status(400).json({msg: 'Token is not valid'});
+        res.status(400).json({ msg: "Token is not valid" });
     }
 };

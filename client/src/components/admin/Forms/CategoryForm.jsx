@@ -1,9 +1,10 @@
-import React, {useMemo, useState, useEffect} from "react";
-import {useDropzone} from "react-dropzone";
+import React, { useMemo, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import TextFieldGroup from "../../common/TextFieldGroup";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTrashAlt} from '@fortawesome/free-solid-svg-icons'
-import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { connect } from "react-redux";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { addCategory } from "../../../actions/category";
 
 const baseStyle = {
     flex: 1,
@@ -33,7 +34,7 @@ const rejectStyle = {
     borderColor: "#ff1744"
 };
 
-function Basic(props) {
+function CategoryForm({ addCategory }) {
     const [file, setFile] = useState("");
     const [name, setName] = useState("");
 
@@ -43,9 +44,11 @@ function Basic(props) {
         getRootProps,
         isDragAccept,
         getInputProps,
-        isDragReject,
+        isDragReject
     } = useDropzone({
-        accept: 'image/png, image/jpeg', multiple, onDrop: acceptedFiles => {
+        accept: "image/png, image/jpeg",
+        multiple,
+        onDrop: acceptedFiles => {
             setFile(acceptedFiles[0]);
         }
     });
@@ -64,15 +67,7 @@ function Basic(props) {
         formData.append("file", file);
         formData.append("name", name);
 
-        try {
-            const res = await axios.post("/api/categories/add", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            });
-        } catch (e) {
-            console.log(e);
-        }
+        addCategory(formData);
     };
 
     const handleDeleteClick = () => {
@@ -101,8 +96,8 @@ function Basic(props) {
                             onChange={onChangeInput}
                             placeholder="Nazwa kategorii..."
                         />
-                        <div {...getRootProps({style})}>
-                            <input {...getInputProps()} onChange={onChange}/>
+                        <div {...getRootProps({ style })}>
+                            <input {...getInputProps()} onChange={onChange} />
                             <p>
                                 Przeciągnij i upuść plik, albo kliknij aby
                                 wybrać plik
@@ -120,8 +115,15 @@ function Basic(props) {
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div className="col-lg-1 flex-delete-icon" onClick={handleDeleteClick}>
-                                            <FontAwesomeIcon icon={faTrashAlt} className="icon-hover" color="#ff6666"/>
+                                        <div
+                                            className="col-lg-1 flex-delete-icon"
+                                            onClick={handleDeleteClick}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faTrashAlt}
+                                                className="icon-hover"
+                                                color="#ff6666"
+                                            />
                                         </div>
                                     </div>
                                 </>
@@ -139,4 +141,7 @@ function Basic(props) {
     );
 }
 
-export default Basic;
+export default connect(
+    null,
+    { addCategory }
+)(CategoryForm);
