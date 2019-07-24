@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import TextFieldGroup from "../../common/TextFieldGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { connect } from "react-redux";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { addCategory } from "../../../actions/category";
+import Alert from "../../layouts/Alert";
 
 const baseStyle = {
     flex: 1,
@@ -34,9 +35,11 @@ const rejectStyle = {
     borderColor: "#ff1744"
 };
 
-function CategoryForm({ addCategory }) {
+function CategoryForm({ errors, addCategory }) {
     const [file, setFile] = useState("");
-    const [name, setName] = useState("");
+    const [form, setForm] = useState({
+        name: ""
+    });
 
     const multiple = false;
     const {
@@ -58,16 +61,21 @@ function CategoryForm({ addCategory }) {
     };
 
     const onChangeInput = e => {
-        setName(e.target.value);
+        setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const onSubmit = async e => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("name", name);
+        formData.append("name", form.name);
 
         addCategory(formData);
+
+        if (errors.length === 0) {
+            setFile("");
+            setForm({ ...form, name: "" });
+        }
     };
 
     const handleDeleteClick = () => {
@@ -85,63 +93,77 @@ function CategoryForm({ addCategory }) {
     );
 
     return (
-        <form onSubmit={onSubmit}>
-            <section className="container add-category-form">
-                <div className="row justify-content-md-center">
-                    <div className="col col-lg-6 mt-5">
-                        <h2 className="text-center">Dodawanie kategorii</h2>
-                        <TextFieldGroup
-                            type="text"
-                            name={name}
-                            onChange={onChangeInput}
-                            placeholder="Nazwa kategorii..."
-                        />
-                        <div {...getRootProps({ style })}>
-                            <input {...getInputProps()} onChange={onChange} />
-                            <p>
-                                Przeciągnij i upuść plik, albo kliknij aby
-                                wybrać plik
-                            </p>
-                        </div>
-                        <aside>
-                            <h4 className="mt-2 mb-3">Załączone pliki</h4>
-                            {file !== "" && (
-                                <>
-                                    <div className="row mb-3">
-                                        <div className="col-lg-11">
-                                            <ul className="list-group">
-                                                <li className="list-group-item">
-                                                    {file.name}
-                                                </li>
-                                            </ul>
+        <React.Fragment>
+            <div className={"container"}>
+                <Alert />
+            </div>
+
+            <form onSubmit={onSubmit}>
+                <section className="container add-category-form">
+                    <div className="row justify-content-md-center">
+                        <div className="col col-lg-6 mt-5">
+                            <h2 className="text-center">Dodawanie kategorii</h2>
+                            <TextFieldGroup
+                                type="text"
+                                name={"name"}
+                                onChange={onChangeInput}
+                                placeholder="Nazwa kategorii..."
+                                value={form.name}
+                            />
+                            <div {...getRootProps({ style })}>
+                                <input
+                                    {...getInputProps()}
+                                    onChange={onChange}
+                                />
+                                <p>
+                                    Przeciągnij i upuść plik, albo kliknij aby
+                                    wybrać plik
+                                </p>
+                            </div>
+                            <aside>
+                                <h4 className="mt-2 mb-3">Załączone pliki</h4>
+                                {file !== "" && (
+                                    <>
+                                        <div className="row mb-3">
+                                            <div className="col-lg-11">
+                                                <ul className="list-group">
+                                                    <li className="list-group-item">
+                                                        {file.name}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div
+                                                className="col-lg-1 flex-delete-icon"
+                                                onClick={handleDeleteClick}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faTrashAlt}
+                                                    className="icon-hover"
+                                                    color="#ff6666"
+                                                />
+                                            </div>
                                         </div>
-                                        <div
-                                            className="col-lg-1 flex-delete-icon"
-                                            onClick={handleDeleteClick}
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={faTrashAlt}
-                                                className="icon-hover"
-                                                color="#ff6666"
-                                            />
-                                        </div>
-                                    </div>
-                                </>
-                            )}
-                        </aside>
-                        <div className="text-right">
-                            <button className="btn btn-block btn-dark">
-                                Dodaj
-                            </button>
+                                    </>
+                                )}
+                            </aside>
+                            <div className="text-right">
+                                <button className="btn btn-block btn-dark">
+                                    Dodaj
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </form>
+                </section>
+            </form>
+        </React.Fragment>
     );
 }
 
+const mapStateToProps = state => ({
+    errors: state.categories.errors
+});
+
 export default connect(
-    null,
+    mapStateToProps,
     { addCategory }
 )(CategoryForm);

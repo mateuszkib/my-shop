@@ -21,7 +21,8 @@ router.post("/add", upload.single("file"), auth, (req, res) => {
 
     if (!empty(errors)) {
         return res.json({
-            errors
+            success: false,
+            errors: [{ msg: errors.name }]
         });
     }
 
@@ -70,14 +71,18 @@ router.post("/add", upload.single("file"), auth, (req, res) => {
             });
 
             newImage.save();
-
             return res.json({
                 success: true,
-                errors: [{ msg: "Category successfully saved" }]
+                msg: "Category successfully saved"
             });
         })
         .catch(err => {
-            console.log(err.name);
+            if (err.errors.name.kind === "unique") {
+                return res.json({
+                    success: false,
+                    errors: [{ msg: "Category with this name exists!" }]
+                });
+            }
             return res.json({
                 success: false,
                 errors: [{ msg: "Error occurred while saved category" }]

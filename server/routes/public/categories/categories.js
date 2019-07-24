@@ -17,10 +17,13 @@ router.get("/image/:categoryID", async (req, res) => {
     try {
         const image = await Image.find({
             categoryID: req.params.categoryID
-        }).select("folder fileName categoryID -_id");
+        }).select("-_id");
         const path = process.cwd() + "/" + image[0].folder + image[0].fileName;
 
-        res.setHeader("Content-type", "image/jpeg");
+        res.set({
+            "Content-type": "image/jpeg",
+            "Image-type": image[0].fileType
+        });
         res.sendFile(path);
     } catch (e) {
         res.status(500).json({

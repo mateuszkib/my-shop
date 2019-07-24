@@ -6,7 +6,6 @@ module.exports = function(req, res, next) {
         ? req.headers.authorization.split(" ")
         : "";
     if (!token[1]) {
-        console.log("Token doesn't exist");
         return res.json({
             success: false,
             error: "Token doesn't exist"

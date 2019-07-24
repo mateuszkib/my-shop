@@ -1,4 +1,5 @@
-import { GET_CATEGORIES } from "./types";
+import { GET_CATEGORIES, ERROR_ADD_CATEGORIES } from "./types";
+import { setAlert } from "./alert";
 import axios from "axios";
 
 // Public methods
@@ -18,7 +19,7 @@ export const getImageCategory = categoryID => async dispatch => {
         const res = await axios.get(`/api/categories/image/${categoryID}`, {
             responseType: "arraybuffer"
         });
-        return res.data;
+        return res;
     } catch (e) {
         console.log(e);
     }
@@ -32,5 +33,14 @@ export const addCategory = body => async dispatch => {
             "Content-Type": "multipart/form-data"
         }
     });
-    console.log(res);
+
+    if (!res.data.success) {
+        res.data.errors.map(error => dispatch(setAlert(error.msg, "danger")));
+        dispatch({
+            type: ERROR_ADD_CATEGORIES,
+            payload: res.data.errors
+        });
+    }
+
+    dispatch(setAlert(res.data.msg, "success"));
 };
