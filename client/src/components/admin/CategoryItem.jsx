@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { getImageCategory } from "../../actions/category";
-import { connect } from "react-redux";
+import React, {useEffect, useState} from "react";
+import {getImageCategory} from "../../actions/category";
+import {connect} from "react-redux";
 
-const CategoryItem = ({ category, getImageCategory }) => {
+const CategoryItem = ({category, getImageCategory}) => {
     const [image, setImage] = useState("");
     const [imageType, setImageType] = useState("");
 
@@ -27,12 +27,14 @@ const CategoryItem = ({ category, getImageCategory }) => {
             <div className={"col"}>
                 <div
                     className="card mx-auto"
-                    style={{ width: "10rem", height: "15rem", border: "none" }}
+                    style={{width: "10rem", height: "15rem", border: "none"}}
                 >
-                    <img
-                        src={"data:" + { imageType } + ";base64," + image}
-                        alt={""}
-                    />
+                    <div className={'text-center'}>
+                        <img
+                            src={"data:" + {imageType} + ";base64," + image}
+                            alt={""}
+                        />
+                    </div>
                     <div className="card-body text-center">
                         <h5 className="card-title">{category.name}</h5>
 
@@ -48,5 +50,5 @@ const CategoryItem = ({ category, getImageCategory }) => {
 
 export default connect(
     null,
-    { getImageCategory }
+    {getImageCategory}
 )(CategoryItem);
