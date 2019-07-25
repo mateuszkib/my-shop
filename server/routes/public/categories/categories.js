@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Load models
-const Image = require("../../../models/ImagesCategory");
+const Image = require("../../../models/Image");
 
 router.get("/", async (req, res) => {
     try {

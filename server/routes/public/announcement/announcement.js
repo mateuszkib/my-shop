@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Load models
-const Advertisement = require("../../../models/Advertisement");
+const Advertisement = require("../../../models/Announcement");
 
 router.get("/", (req, res) => {
     Advertisement.find()
@@ -21,9 +21,9 @@ router.get("/", (req, res) => {
         });
 });
 
-router.get("/:id", (req, res) => {
-    const advId = req.params.id;
-    Advertisement.findById(advId)
+router.get("/:name", (req, res) => {
+    const categoryName = req.params.name;
+    Advertisement.find({ name: categoryName })
         .then(adv => {
             console.log(adv);
         })

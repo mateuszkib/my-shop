@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getCategories } from "../../actions/category";
-import CategoryItem from "../admin/CategoryItem";
+import CategoryItem from "../categories/CategoryItem";
 
 const Home = ({ getCategories }) => {
     const [categories, setCategories] = useState([]);
@@ -15,7 +15,7 @@ const Home = ({ getCategories }) => {
     return (
         <div>
             <div className="container-fluid">
-                <div class="row mt-5">
+                <div className="row mt-5">
                     {categories.map(category => (
                         <CategoryItem key={category._id} category={category} />
                     ))}

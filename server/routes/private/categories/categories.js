@@ -11,7 +11,7 @@ const auth = require("../../../middleware/auth");
 
 // Load models
 const Category = require("../../../models/Category");
-const Image = require("../../../models/ImagesCategory");
+const Image = require("../../../models/Image");
 
 // Load validation
 const validationInputAddCategory = require("../../../validation/validationInputAddCategory");

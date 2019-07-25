@@ -10,10 +10,10 @@ const PORT = 3000;
 // Load routes
 const auth = require("./routes/auth/auth");
 const user = require("./routes/public/users/users");
-const advertisement = require("./routes/public/advertisement/advertisement");
+const announcement = require("./routes/public/announcement/announcement");
 const categories = require("./routes/public/categories/categories");
 
-const privateAdvertisementRoutes = require("./routes/private/advertisement/advertisement");
+const privateAnnouncementRoutes = require("./routes/private/announcement/announcement");
 const privateUserRoutes = require("./routes/private/user/user");
 const privateCategories = require("./routes/private/categories/categories");
 
@@ -37,11 +37,11 @@ db.connect(config.mongoUri);
 // Public routes
 app.use("/api/auth", auth);
 app.use("/api/user", user);
-app.use("/api/advertisement", advertisement);
+app.use("/api/announcement", announcement);
 app.use("/api/categories", categories);
 
 // Private routes
-app.use("/api/private/advertisement", privateAdvertisementRoutes);
+app.use("/api/private/announcement", privateAnnouncementRoutes);
 app.use("/api/private/categories", privateCategories);
 app.use("/api/private/user", privateUserRoutes);
 

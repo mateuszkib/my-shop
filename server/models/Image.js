@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ImagesSchema = new Schema({
+const ImageSchema = new Schema({
     folder: {
         type: String,
         required: true
@@ -18,10 +18,14 @@ const ImagesSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category"
     },
+    announcementID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Announcement"
+    },
     createdAt: {
         type: Date,
         default: Date.now
     }
 });
 
-module.exports = Images = mongoose.model("images", ImagesSchema);
+module.exports = Image = mongoose.model("images", ImageSchema);
