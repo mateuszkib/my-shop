@@ -10,7 +10,7 @@ const Home = ({ getCategories }) => {
     useEffect(() => {
         const listCategories = getCategories();
         listCategories.then(res => setCategories(res));
-    }, []);
+    });
 
     return (
         <div>

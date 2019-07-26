@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const Announcement = ({ getAdvertisements, match }) => {
     useEffect(() => {
         getAdvertisements(match.params.category);
-    });
+    }, []);
 
     return (
         <div className={"container-fluid"}>

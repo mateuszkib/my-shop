@@ -9,6 +9,7 @@ import { setAuthToken } from "./utils/setAuthToken";
 import { loadUser } from "./actions/auth";
 import Announcement from "./components/announcement/Announcement";
 import AddAnnouncementForm from "./components/announcement/AddAnnouncementForm";
+import { PrivateRoute } from "./components/helpers/PrivateRoute";
 
 //Redux
 import { Provider } from "react-redux";
@@ -27,33 +28,26 @@ function App() {
         <Provider store={store}>
             <div className="App">
                 <Router>
-                    <Switch>
-                        <Navbar />
-                        <main>
-                            <Route exact path={"/"} component={Home} />
-                            <Route
-                                exact
-                                path="/admin/categories/add"
-                                component={CategoryForm}
-                            />
-                            <Route
-                                exact
-                                path="/register"
-                                component={Register}
-                            />
-                            <Route exact path="/login" component={Login} />
-                            <Route
-                                exact
-                                path="/announcement/:category"
-                                component={Announcement}
-                            />
-                            <Route
-                                exact
-                                path="/announcement/add"
-                                component={AddAnnouncementForm}
-                            />
-                        </main>
-                    </Switch>
+                    <Navbar />
+                    <Route exact path="/login" component={Login} />
+                    <Route exact path="/register" component={Register} />
+                    <main>
+                        <Route exact path={"/"} component={Home} />
+                        <Route
+                            exact
+                            path="/announcements/:category"
+                            component={Announcement}
+                        />
+                        <PrivateRoute
+                            exact
+                            path="/admin/categories/add"
+                            component={CategoryForm}
+                        />
+                        <PrivateRoute
+                            path="/announcement/add"
+                            component={AddAnnouncementForm}
+                        />
+                    </main>
                 </Router>
             </div>
         </Provider>

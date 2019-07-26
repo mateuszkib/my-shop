@@ -40,7 +40,7 @@ const CategoryItem = ({ category, getImageCategory }) => {
                         <h5 className="card-title">{category.name}</h5>
 
                         <Link
-                            to={`/announcement/${category.name}`}
+                            to={`/announcements/${category.name}`}
                             className={"btn btn-secondary"}
                         >
                             View

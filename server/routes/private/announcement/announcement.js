@@ -2,7 +2,12 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const empty = require("is-empty");
+const auth = require("../../../middleware/auth");
 const { updatedDiff } = require("deep-object-diff");
+const multer = require("multer");
+const upload = multer({
+    dest: "tmp/"
+});
 
 // Load models
 const Advertisement = require("../../../models/Announcement");
@@ -162,5 +167,14 @@ router.post(
             });
     }
 );
+
+router.post("/upload", upload.single("file"), (req, res) => {
+    try {
+        console.log(req.file);
+        console.log(req.files);
+    } catch (e) {
+        console.log(e);
+    }
+});
 
 module.exports = router;
