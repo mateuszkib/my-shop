@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import TextFieldGroup from "../../common/TextFieldGroup";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { addCategory } from "../../../actions/category";
 import Alert from "../../layouts/Alert";

@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import TextFieldGroup from "../common/TextFieldGroup";
-import axios from "axios";
 
 const baseStyle = {
     flex: 1,
@@ -46,9 +47,81 @@ const AddAnnouncementForm = props => {
         accept: "image/png, image/jpeg",
         multiple,
         onDrop: acceptedFiles => {
-            setFiles([acceptedFiles]);
+            setFiles(
+                acceptedFiles.map((file, key) =>
+                    Object.assign(file, {
+                        preview: URL.createObjectURL(file),
+                        key
+                    })
+                )
+            );
         }
     });
+
+    const handleDeleteImageClick = key => {
+        const res = files.filter(item => item.key !== key);
+        setFiles([...res]);
+    };
+
+    const thumbsContainer = {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginTop: 16
+    };
+
+    const thumb = {
+        display: "inline-flex",
+        borderRadius: 2,
+        border: "1px solid #eaeaea",
+        marginBottom: 8,
+        marginRight: 8,
+        width: 100,
+        height: 100,
+        padding: 4,
+        boxSizing: "border-box",
+        position: "relative"
+    };
+
+    const thumbInner = {
+        display: "flex",
+        minWidth: 0,
+        overflow: "hidden"
+    };
+
+    const img = {
+        display: "block",
+        width: "auto",
+        height: "100%"
+    };
+
+    const deleteIcon = {
+        position: "absolute",
+        right: "3px",
+        color: "#ff6666"
+    };
+
+    const thumbs = files.map(file => (
+        <div style={thumb} key={file.name}>
+            <div style={thumbInner}>
+                <img src={file.preview} style={img} alt={file.name} />
+                <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    className="icon-hover"
+                    style={deleteIcon}
+                    onClick={() => handleDeleteImageClick(file.key)}
+                />
+            </div>
+        </div>
+    ));
+
+    useEffect(
+        () => () => {
+            // Make sure to revoke the data uris to avoid memory leaks
+            files.forEach(file => URL.revokeObjectURL(file.preview));
+        },
+        [files]
+    );
 
     const style = useMemo(
         () => ({
@@ -62,22 +135,6 @@ const AddAnnouncementForm = props => {
 
     const onChange = e => {
         console.log(e.target.files);
-    };
-
-    const uploadFiles = async e => {
-        e.preventDefault();
-        const formData = new FormData();
-        console.log(files);
-        formData.append("file", files[0][0]);
-        try {
-            const res = await axios.post(
-                "/api/private/announcement/upload",
-                formData,
-                { headers: { "Content-Type": "multipart/form-data" } }
-            );
-        } catch (e) {
-            console.log(e);
-        }
     };
 
     return (
@@ -127,18 +184,7 @@ const AddAnnouncementForm = props => {
                             plik
                         </p>
                     </div>
-                    Files :{files.map(file => file.map(f => f.name))}
-                    <div
-                        className={"d-flex align-items-end"}
-                        style={{ height: "100%" }}
-                    >
-                        <button
-                            className={"btn btn-block btn-dark"}
-                            onClick={uploadFiles}
-                        >
-                            Upload
-                        </button>
-                    </div>
+                    <aside style={thumbsContainer}>{thumbs}</aside>
                 </div>
             </div>
         </section>
