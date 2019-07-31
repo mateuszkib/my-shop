@@ -42,25 +42,27 @@ const AddAnnouncementForm = props => {
         getRootProps,
         isDragAccept,
         getInputProps,
-        isDragReject
+        isDragReject,
+        acceptedFiles
     } = useDropzone({
         accept: "image/png, image/jpeg",
         multiple,
         onDrop: acceptedFiles => {
-            setFiles(
+            setFiles([
+                ...files,
                 acceptedFiles.map((file, key) =>
                     Object.assign(file, {
                         preview: URL.createObjectURL(file),
                         key
                     })
                 )
-            );
+            ]);
         }
     });
 
     const handleDeleteImageClick = key => {
-        const res = files.filter(item => item.key !== key);
-        setFiles([...res]);
+        const res = files.filter((item, j) => console.log(item));
+        // setFiles([...res]);
     };
 
     const thumbsContainer = {
@@ -101,19 +103,21 @@ const AddAnnouncementForm = props => {
         color: "#ff6666"
     };
 
-    const thumbs = files.map(file => (
-        <div style={thumb} key={file.name}>
-            <div style={thumbInner}>
-                <img src={file.preview} style={img} alt={file.name} />
-                <FontAwesomeIcon
-                    icon={faTrashAlt}
-                    className="icon-hover"
-                    style={deleteIcon}
-                    onClick={() => handleDeleteImageClick(file.key)}
-                />
+    const thumbs = files.map(file =>
+        file.map(file => (
+            <div style={thumb} key={file.name}>
+                <div style={thumbInner}>
+                    <img src={file.preview} style={img} alt={file.name} />
+                    <FontAwesomeIcon
+                        icon={faTrashAlt}
+                        className="icon-hover"
+                        style={deleteIcon}
+                        onClick={() => handleDeleteImageClick(file.key)}
+                    />
+                </div>
             </div>
-        </div>
-    ));
+        ))
+    );
 
     useEffect(
         () => () => {
@@ -132,10 +136,6 @@ const AddAnnouncementForm = props => {
         }),
         [isDragActive, isDragReject]
     );
-
-    const onChange = e => {
-        console.log(e.target.files);
-    };
 
     return (
         <section className="container">
@@ -178,7 +178,7 @@ const AddAnnouncementForm = props => {
                 </div>
                 <div className={"col col-lg-6 mt-5"}>
                     <div {...getRootProps({ style })}>
-                        <input {...getInputProps()} onChange={onChange} />
+                        <input {...getInputProps()} />
                         <p>
                             Przeciągnij i upuść plik, albo kliknij aby wybrać
                             plik
