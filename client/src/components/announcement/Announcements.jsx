@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { getAdvertisements } from "../../actions/announcement";
+import { getAnnouncements } from "../../actions/announcement";
 import { Link } from "react-router-dom";
 
-const Announcement = ({ getAdvertisements, match }) => {
+const Announcement = ({ getAnnouncements, match }) => {
+    const category = match.params.category;
+
     useEffect(() => {
-        getAdvertisements(match.params.category);
+        getAnnouncements(match.params.category);
     }, []);
 
     return (
@@ -13,7 +15,7 @@ const Announcement = ({ getAdvertisements, match }) => {
             <div className={"row mt-5 text-right"}>
                 <div className={"col"}>
                     <Link
-                        to={"/announcement/add"}
+                        to={`/announcement/${category}/add`}
                         className={"btn btn-success"}
                     >
                         Add advertisement
@@ -26,5 +28,5 @@ const Announcement = ({ getAdvertisements, match }) => {
 
 export default connect(
     null,
-    { getAdvertisements }
+    { getAnnouncements }
 )(Announcement);

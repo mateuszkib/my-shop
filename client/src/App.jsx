@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import Navbar from "./components/layouts/Navbar";
 import CategoryForm from "./components/admin/Forms/CategoryForm";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Home from "./components/layouts/Home";
 import { setAuthToken } from "./utils/setAuthToken";
 import { loadUser } from "./actions/auth";
-import Announcement from "./components/announcement/Announcement";
+import Announcement from "./components/announcement/Announcements";
 import AddAnnouncementForm from "./components/announcement/AddAnnouncementForm";
 import { PrivateRoute } from "./components/helpers/PrivateRoute";
 
@@ -44,7 +44,7 @@ function App() {
                             component={CategoryForm}
                         />
                         <PrivateRoute
-                            path="/announcement/add"
+                            path="/announcement/:category/add"
                             component={AddAnnouncementForm}
                         />
                     </main>

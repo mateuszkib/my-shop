@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import TextFieldGroup from "../../common/TextFieldGroup";
 import { connect } from "react-redux";
@@ -89,6 +89,7 @@ function CategoryForm({ errors, addCategory }) {
             ...(isDragAccept ? acceptStyle : {}),
             ...(isDragReject ? rejectStyle : {})
         }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [isDragActive, isDragReject]
     );
 

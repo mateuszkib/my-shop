@@ -1,9 +1,17 @@
-import { GET_ADVERTISEMENTS } from "./types";
+import { ADD_ANNOUNCEMENT } from "./types";
 import axios from "axios";
 
-export const getAdvertisements = name => async dispatch => {
+export const getAnnouncements = name => async dispatch => {
     try {
         const res = await axios.get(`/api/announcement/${name}`);
-        console.log(res);
     } catch (e) {}
+};
+
+export const addAnnouncement = data => async dispatch => {
+    try {
+        let res = await axios.post(`/api/private/announcement/add`, data);
+        console.log(res);
+    } catch (e) {
+        console.log(e);
+    }
 };

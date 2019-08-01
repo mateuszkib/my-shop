@@ -1,9 +1,12 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import TextFieldGroup from "../common/TextFieldGroup";
+import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
+import { addAnnouncement } from "../../actions/announcement";
 
 const baseStyle = {
     flex: 1,
@@ -33,8 +36,15 @@ const rejectStyle = {
     borderColor: "#ff1744"
 };
 
-const AddAnnouncementForm = props => {
+const AddAnnouncementForm = ({ user, addAnnouncement }) => {
     const [files, setFiles] = useState([]);
+    const [formData, setFormData] = useState({
+        title: "",
+        description: "",
+        localization: "",
+        name: "",
+        telephoneNumber: ""
+    });
 
     const multiple = true;
     const {
@@ -42,27 +52,29 @@ const AddAnnouncementForm = props => {
         getRootProps,
         isDragAccept,
         getInputProps,
-        isDragReject,
-        acceptedFiles
+        isDragReject
     } = useDropzone({
         accept: "image/png, image/jpeg",
         multiple,
         onDrop: acceptedFiles => {
             setFiles([
                 ...files,
-                acceptedFiles.map((file, key) =>
+                acceptedFiles.map(file =>
                     Object.assign(file, {
-                        preview: URL.createObjectURL(file),
-                        key
+                        preview: URL.createObjectURL(file)
                     })
                 )
             ]);
         }
     });
 
-    const handleDeleteImageClick = key => {
-        const res = files.filter((item, j) => console.log(item));
-        // setFiles([...res]);
+    const handleDeleteImageClick = (indexNested, index) => {
+        files.map((file, i) => {
+            if (i === index) {
+                file.splice(indexNested, 1);
+            }
+        });
+        setFiles([...files]);
     };
 
     const thumbsContainer = {
@@ -103,8 +115,8 @@ const AddAnnouncementForm = props => {
         color: "#ff6666"
     };
 
-    const thumbs = files.map(file =>
-        file.map(file => (
+    const thumbs = files.map((file, index) =>
+        file.map((file, indexNested) => (
             <div style={thumb} key={file.name}>
                 <div style={thumbInner}>
                     <img src={file.preview} style={img} alt={file.name} />
@@ -112,12 +124,28 @@ const AddAnnouncementForm = props => {
                         icon={faTrashAlt}
                         className="icon-hover"
                         style={deleteIcon}
-                        onClick={() => handleDeleteImageClick(file.key)}
+                        onClick={() =>
+                            handleDeleteImageClick(indexNested, index)
+                        }
                     />
                 </div>
             </div>
         ))
     );
+
+    const onChange = e => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const onClickSubmit = e => {
+        e.preventDefault();
+
+        let data = new FormData();
+        data.append("files", files);
+        data.append("form", formData);
+
+        addAnnouncement(data);
+    };
 
     useEffect(
         () => () => {
@@ -141,42 +169,20 @@ const AddAnnouncementForm = props => {
         <section className="container">
             <div className="row justify-content-md-center">
                 <div className="col col-lg-6 mt-5">
-                    <h2 className="text-center">Add advertisement</h2>
                     <TextFieldGroup
                         name={"title"}
                         placeholder={"Title..."}
                         type={"text"}
+                        onChange={onChange}
                     />
-                    <TextFieldGroup
-                        type={"text"}
+                    <TextAreaFieldGroup
                         name={"description"}
+                        rows={10}
                         placeholder={"Description..."}
+                        onChange={onChange}
                     />
-                    <TextFieldGroup
-                        type={"text"}
-                        name={"localization"}
-                        placeholder={"Localization..."}
-                    />
-                    <TextFieldGroup
-                        name={"name"}
-                        placeholder={"Name..."}
-                        type={"text"}
-                    />
-                    <TextFieldGroup
-                        name={"email"}
-                        placeholder={"Email..."}
-                        type={"text"}
-                    />
-                    <TextFieldGroup
-                        type={"text"}
-                        name={"telephoneNumber"}
-                        placeholder={"Telephone number..."}
-                    />
-                    <div className="text-right">
-                        <button className="btn btn-block btn-dark">Add</button>
-                    </div>
-                </div>
-                <div className={"col col-lg-6 mt-5"}>
+                    <hr />
+                    <h4>Upload images</h4>
                     <div {...getRootProps({ style })}>
                         <input {...getInputProps()} />
                         <p>
@@ -184,13 +190,62 @@ const AddAnnouncementForm = props => {
                             plik
                         </p>
                     </div>
-                    <aside style={thumbsContainer}>{thumbs}</aside>
+                    <div style={thumbsContainer}>{thumbs}</div>
+                    <hr />
+                    <TextFieldGroup
+                        type={"text"}
+                        name={"localization"}
+                        placeholder={"Localization..."}
+                        onChange={onChange}
+                        value={formData.localization}
+                    />
+                    <TextFieldGroup
+                        name={"name"}
+                        placeholder={"Name..."}
+                        type={"text"}
+                        onChange={onChange}
+                        value={formData.name}
+                    />
+                    <TextFieldGroup
+                        name={"email"}
+                        placeholder={"Email..."}
+                        type={"text"}
+                        value={formData.email}
+                        disabled={true}
+                        onChange={onChange}
+                    />
+                    <TextFieldGroup
+                        type={"text"}
+                        name={"telephoneNumber"}
+                        placeholder={"Telephone number..."}
+                        onChange={onChange}
+                        value={formData.telephoneNumber}
+                    />
+                    <hr />
+                    <div className="text-right mb-5">
+                        <button
+                            className="btn btn-block btn-dark"
+                            onClick={onClickSubmit}
+                        >
+                            Add
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
     );
 };
 
-AddAnnouncementForm.propTypes = {};
+AddAnnouncementForm.propTypes = {
+    user: PropTypes.object,
+    addAnnouncement: PropTypes.func
+};
 
-export default AddAnnouncementForm;
+const mapStateToProps = state => ({
+    user: state.auth.user
+});
+
+export default connect(
+    mapStateToProps,
+    { addAnnouncement }
+)(AddAnnouncementForm);

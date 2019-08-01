@@ -16,61 +16,58 @@ const Advertisement = require("../../../models/Announcement");
 // Load validation
 const validationInputAddAdvertisement = require("../../../validation/validationInputAddAdvertisement");
 
-router.post(
-    "/add",
-    passport.authenticate("jwt", { session: false }),
-    (req, res) => {
-        const { errors } = validationInputAddAdvertisement(req.body);
+router.post("/add", auth, (req, res) => {
+    const { errors } = validationInputAddAdvertisement(req.body);
+    console.log(req.files);
+    console.log(req.body);
+    if (!empty(errors)) {
+        return res.json({
+            success: false,
+            errors
+        });
+    }
 
-        if (!empty(errors)) {
+    // Advertisement.find({ title: req.body.title }).then(adv => {
+    //     if (adv) {
+    //         errors.title = "errorTitleExist";
+    //         return res.json({
+    //             success: false,
+    //             errors
+    //         });
+    //     }
+    // });
+
+    const newAdvert = new Advertisement({
+        userID: req.user._id,
+        categoryID: req.user._id,
+        title: req.body.title,
+        description: req.body.description,
+        expiredAt: Date.now()
+    });
+
+    newAdvert.contactDetails = {
+        localization: req.body.localization,
+        name: req.body.name,
+        email: req.body.email,
+        telephoneNumber: req.body.number
+    };
+
+    newAdvert
+        .save()
+        .then(result => {
+            return res.json({
+                success: true,
+                message: "successAddAdvertisement"
+            });
+        })
+        .catch(err => {
+            console.log(err);
             return res.json({
                 success: false,
-                errors
+                message: "errorAddAdvertisement"
             });
-        }
-
-        // Advertisement.find({ title: req.body.title }).then(adv => {
-        //     if (adv) {
-        //         errors.title = "errorTitleExist";
-        //         return res.json({
-        //             success: false,
-        //             errors
-        //         });
-        //     }
-        // });
-
-        const newAdvert = new Advertisement({
-            userID: req.user._id,
-            categoryID: req.user._id,
-            title: req.body.title,
-            description: req.body.description,
-            expiredAt: Date.now()
         });
-
-        newAdvert.contactDetails = {
-            localization: req.body.localization,
-            name: req.body.name,
-            email: req.body.email,
-            telephoneNumber: req.body.number
-        };
-
-        newAdvert
-            .save()
-            .then(result => {
-                return res.json({
-                    success: true,
-                    message: "successAddAdvertisement"
-                });
-            })
-            .catch(err => {
-                console.log(err);
-                return res.json({
-                    success: false,
-                    message: "errorAddAdvertisement"
-                });
-            });
-    }
-);
+});
 
 router.post(
     "/edit/:id",
