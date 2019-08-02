@@ -12,14 +12,13 @@ const upload = multer({
 
 // Load models
 const Advertisement = require("../../../models/Announcement");
+const Category = require("../../../models/Category");
 
 // Load validation
 const validationInputAddAdvertisement = require("../../../validation/validationInputAddAdvertisement");
 
-router.post("/add", auth, (req, res) => {
+router.post("/add", auth, upload.any(), async (req, res) => {
     const { errors } = validationInputAddAdvertisement(req.body);
-    console.log(req.files);
-    console.log(req.body);
     if (!empty(errors)) {
         return res.json({
             success: false,
@@ -27,19 +26,21 @@ router.post("/add", auth, (req, res) => {
         });
     }
 
-    // Advertisement.find({ title: req.body.title }).then(adv => {
-    //     if (adv) {
-    //         errors.title = "errorTitleExist";
-    //         return res.json({
-    //             success: false,
-    //             errors
-    //         });
-    //     }
-    // });
+    Advertisement.find({ title: req.body.title }).then(adv => {
+        if (adv.length !== 0) {
+            return res.json({
+                success: false,
+                errors: [
+                    { msg: "An advertisement with such a title already exists" }
+                ]
+            });
+        }
+    });
 
+    let category = await Category.find({ name: req.body.category });
     const newAdvert = new Advertisement({
-        userID: req.user._id,
-        categoryID: req.user._id,
+        userID: req.user.id,
+        categoryID: category[0]._id,
         title: req.body.title,
         description: req.body.description,
         expiredAt: Date.now()

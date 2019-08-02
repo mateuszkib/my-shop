@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ContactDetailSchema = new Schema({
@@ -11,10 +11,10 @@ const ContactDetailSchema = new Schema({
         required: true
     },
     email: {
-        type: String,
+        type: String
     },
     telephoneNumber: {
-        type: Number
+        type: String
     },
     createdAt: {
         type: Date,
@@ -22,4 +22,7 @@ const ContactDetailSchema = new Schema({
     }
 });
 
-module.exports = ContactDetail = mongoose.model('contactDetail', ContactDetailSchema);
+module.exports = ContactDetail = mongoose.model(
+    "contactDetail",
+    ContactDetailSchema
+);

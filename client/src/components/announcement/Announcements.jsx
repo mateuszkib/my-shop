@@ -7,7 +7,7 @@ const Announcement = ({ getAnnouncements, match }) => {
     const category = match.params.category;
 
     useEffect(() => {
-        getAnnouncements(match.params.category);
+        getAnnouncements(category);
     }, []);
 
     return (

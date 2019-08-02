@@ -6,7 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
+import SelectFieldGroup from "../common/SelectFieldGroup";
 import { addAnnouncement } from "../../actions/announcement";
+import Alert from "../layouts/Alert";
 
 const baseStyle = {
     flex: 1,
@@ -36,15 +38,19 @@ const rejectStyle = {
     borderColor: "#ff1744"
 };
 
-const AddAnnouncementForm = ({ user, addAnnouncement }) => {
+const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
     const [files, setFiles] = useState([]);
     const [formData, setFormData] = useState({
         title: "",
         description: "",
         localization: "",
+        email: "",
         name: "",
-        telephoneNumber: ""
+        telephoneNumber: "",
+        duration: ""
     });
+
+    const durations = ["3 days", "1 week", "2 week", "1 month"];
 
     const multiple = true;
     const {
@@ -140,20 +146,28 @@ const AddAnnouncementForm = ({ user, addAnnouncement }) => {
     const onClickSubmit = e => {
         e.preventDefault();
 
-        let data = new FormData();
-        data.append("files", files);
-        data.append("form", formData);
+        let fd = new FormData();
 
-        addAnnouncement(data);
+        for (let i = 0; i < files.length; i++) {
+            for (let j = 0; j < files[i].length; j++) {
+                fd.append("file", files[i][j]);
+            }
+        }
+
+        for (let key in formData) {
+            fd.append(key, formData[key]);
+        }
+
+        fd.append("category", match.params.category);
+
+        addAnnouncement(fd);
     };
 
-    useEffect(
-        () => () => {
-            // Make sure to revoke the data uris to avoid memory leaks
-            files.forEach(file => URL.revokeObjectURL(file.preview));
-        },
-        [files]
-    );
+    useEffect(() => {
+        setFormData({ ...formData, email: user ? user.email : "" });
+        // Make sure to revoke the data uris to avoid memory leaks
+        files.forEach(file => URL.revokeObjectURL(file.preview));
+    }, [user]);
 
     const style = useMemo(
         () => ({
@@ -167,6 +181,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement }) => {
 
     return (
         <section className="container">
+            <Alert />
             <div className="row justify-content-md-center">
                 <div className="col col-lg-6 mt-5">
                     <TextFieldGroup
@@ -197,14 +212,12 @@ const AddAnnouncementForm = ({ user, addAnnouncement }) => {
                         name={"localization"}
                         placeholder={"Localization..."}
                         onChange={onChange}
-                        value={formData.localization}
                     />
                     <TextFieldGroup
                         name={"name"}
                         placeholder={"Name..."}
                         type={"text"}
                         onChange={onChange}
-                        value={formData.name}
                     />
                     <TextFieldGroup
                         name={"email"}
@@ -221,6 +234,8 @@ const AddAnnouncementForm = ({ user, addAnnouncement }) => {
                         onChange={onChange}
                         value={formData.telephoneNumber}
                     />
+                    <h4>Duration</h4>
+                    <SelectFieldGroup durations={durations} />
                     <hr />
                     <div className="text-right mb-5">
                         <button
