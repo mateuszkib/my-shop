@@ -7,5 +7,6 @@ module.exports = {
     email: "matmarket77@gmail.com",
     password: "MatMarket7ygv",
     salt: "s0mRIdlKvI",
-    pathCategoryImage: "files/categories/"
+    pathCategoryImage: "files/categories/",
+    pathAdvertisementImage: "files/advertisements/"
 };

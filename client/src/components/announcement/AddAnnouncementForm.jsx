@@ -1,13 +1,13 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { useDropzone } from "react-dropzone";
+import React, {useMemo, useState, useEffect} from "react";
+import {useDropzone} from "react-dropzone";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import {connect} from "react-redux";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import SelectFieldGroup from "../common/SelectFieldGroup";
-import { addAnnouncement } from "../../actions/announcement";
+import {addAnnouncement} from "../../actions/announcement";
 import Alert from "../layouts/Alert";
 
 const baseStyle = {
@@ -38,7 +38,7 @@ const rejectStyle = {
     borderColor: "#ff1744"
 };
 
-const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
+const AddAnnouncementForm = ({user, addAnnouncement, match}) => {
     const [files, setFiles] = useState([]);
     const [formData, setFormData] = useState({
         title: "",
@@ -47,7 +47,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
         email: "",
         name: "",
         telephoneNumber: "",
-        duration: ""
+        duration: "3 days"
     });
 
     const durations = ["3 days", "1 week", "2 week", "1 month"];
@@ -125,7 +125,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
         file.map((file, indexNested) => (
             <div style={thumb} key={file.name}>
                 <div style={thumbInner}>
-                    <img src={file.preview} style={img} alt={file.name} />
+                    <img src={file.preview} style={img} alt={file.name}/>
                     <FontAwesomeIcon
                         icon={faTrashAlt}
                         className="icon-hover"
@@ -140,7 +140,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
     );
 
     const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({...formData, [e.target.name]: e.target.value});
     };
 
     const onClickSubmit = e => {
@@ -164,7 +164,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
     };
 
     useEffect(() => {
-        setFormData({ ...formData, email: user ? user.email : "" });
+        setFormData({...formData, email: user ? user.email : ""});
         // Make sure to revoke the data uris to avoid memory leaks
         files.forEach(file => URL.revokeObjectURL(file.preview));
     }, [user]);
@@ -179,9 +179,13 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
         [isDragActive, isDragReject]
     );
 
+    const onChangeSelect = (e) => {
+        setFormData({...formData, duration: e.target.value})
+    };
+
     return (
         <section className="container">
-            <Alert />
+            <Alert/>
             <div className="row justify-content-md-center">
                 <div className="col col-lg-6 mt-5">
                     <TextFieldGroup
@@ -196,9 +200,9 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
                         placeholder={"Description..."}
                         onChange={onChange}
                     />
-                    <hr />
+                    <hr/>
                     <h4>Upload images</h4>
-                    <div {...getRootProps({ style })}>
+                    <div {...getRootProps({style})}>
                         <input {...getInputProps()} />
                         <p>
                             Przeciągnij i upuść plik, albo kliknij aby wybrać
@@ -206,7 +210,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
                         </p>
                     </div>
                     <div style={thumbsContainer}>{thumbs}</div>
-                    <hr />
+                    <hr/>
                     <TextFieldGroup
                         type={"text"}
                         name={"localization"}
@@ -235,8 +239,8 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match }) => {
                         value={formData.telephoneNumber}
                     />
                     <h4>Duration</h4>
-                    <SelectFieldGroup durations={durations} />
-                    <hr />
+                    <SelectFieldGroup onChange={onChangeSelect} value={formData.duration} durations={durations}/>
+                    <hr/>
                     <div className="text-right mb-5">
                         <button
                             className="btn btn-block btn-dark"
@@ -262,5 +266,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { addAnnouncement }
+    {addAnnouncement}
 )(AddAnnouncementForm);

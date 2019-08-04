@@ -3,8 +3,9 @@ const router = express.Router();
 const passport = require("passport");
 const empty = require("is-empty");
 const fs = require("fs");
+const config = require("../../../config/config");
 const auth = require("../../../middleware/auth");
-const { updatedDiff } = require("deep-object-diff");
+const {updatedDiff} = require("deep-object-diff");
 const multer = require("multer");
 const upload = multer({
     dest: "tmp/"
@@ -13,12 +14,20 @@ const upload = multer({
 // Load models
 const Advertisement = require("../../../models/Announcement");
 const Category = require("../../../models/Category");
+const Image = require("../../../models/Image");
 
 // Load validation
 const validationInputAddAdvertisement = require("../../../validation/validationInputAddAdvertisement");
 
 router.post("/add", auth, upload.any(), async (req, res) => {
-    const { errors } = validationInputAddAdvertisement(req.body);
+
+    const {errors} = validationInputAddAdvertisement(req.body);
+    let duration = req.body.duration;
+    let expiredAdvert = new Date();
+    let category = await Category.find({name: req.body.category});
+    let path = config.pathAdvertisementImage;
+    let files = req.files;
+
     if (!empty(errors)) {
         return res.json({
             success: false,
@@ -26,24 +35,41 @@ router.post("/add", auth, upload.any(), async (req, res) => {
         });
     }
 
-    Advertisement.find({ title: req.body.title }).then(adv => {
+    files.map(file => {
+       
+    });
+
+    Advertisement.find({title: req.body.title}).then(adv => {
         if (adv.length !== 0) {
             return res.json({
                 success: false,
                 errors: [
-                    { msg: "An advertisement with such a title already exists" }
+                    {msg: "An advertisement with such a title already exists"}
                 ]
             });
         }
     });
 
-    let category = await Category.find({ name: req.body.category });
+    switch (duration) {
+        case '3 days':
+            expiredAdvert = expiredAdvert.setDate(expiredAdvert.getDate() + 3);
+            break;
+        case '1 week':
+            expiredAdvert = expiredAdvert.setDate(expiredAdvert.getDate() + 7);
+            break;
+        case '2 week':
+            expiredAdvert = expiredAdvert.setDate(expiredAdvert.getDate() + 14);
+            break;
+        case '1 month':
+            expiredAdvert = expiredAdvert.setDate(expiredAdvert.getDate() + 31);
+    }
+
     const newAdvert = new Advertisement({
         userID: req.user.id,
         categoryID: category[0]._id,
         title: req.body.title,
         description: req.body.description,
-        expiredAt: Date.now()
+        expiredAt: expiredAdvert
     });
 
     newAdvert.contactDetails = {
@@ -53,28 +79,28 @@ router.post("/add", auth, upload.any(), async (req, res) => {
         telephoneNumber: req.body.number
     };
 
-    newAdvert
-        .save()
-        .then(result => {
-            return res.json({
-                success: true,
-                message: "successAddAdvertisement"
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            return res.json({
-                success: false,
-                message: "errorAddAdvertisement"
-            });
-        });
+    // newAdvert
+    //     .save()
+    //     .then(() => {
+    //         return res.json({
+    //             success: true,
+    //             msg: "Advertisement successfully added"
+    //         });
+    //     })
+    //     .catch(err => {
+    //         console.log(err);
+    //         return res.json({
+    //             success: false,
+    //             message: "Error occurred with add advertisement"
+    //         });
+    //     });
 });
 
 router.post(
     "/edit/:id",
-    passport.authenticate("jwt", { session: false }),
+    passport.authenticate("jwt", {session: false}),
     (req, res) => {
-        const { errors } = validationInputAddAdvertisement(req.body);
+        const {errors} = validationInputAddAdvertisement(req.body);
         const advId = req.params.id;
 
         if (!empty(errors)) {
@@ -146,7 +172,7 @@ router.post(
 
 router.post(
     "/delete/:id",
-    passport.authenticate("jwt", { session: false }),
+    passport.authenticate("jwt", {session: false}),
     (req, res) => {
         const advId = req.params.id;
 
