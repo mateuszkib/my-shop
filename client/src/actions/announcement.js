@@ -1,12 +1,11 @@
-import {ADD_ANNOUNCEMENT} from "./types";
-import {setAlert} from "./alert";
+import { ADD_ANNOUNCEMENT } from "./types";
+import { setAlert } from "./alert";
 import axios from "axios";
 
 export const getAnnouncements = name => async dispatch => {
     try {
         const res = await axios.get(`/api/announcement/${name}`);
-    } catch (e) {
-    }
+    } catch (e) {}
 };
 
 export const addAnnouncement = data => async dispatch => {
@@ -15,12 +14,11 @@ export const addAnnouncement = data => async dispatch => {
 
         if (!res.data.success) {
             res.data.errors.map(error =>
-                dispatch(setAlert(error.msg, "danger", 1000000))
+                dispatch(setAlert(error.msg, "danger"))
             );
         } else {
-            dispatch(setAlert(res.data.msg, 'success'));
+            dispatch(setAlert(res.data.msg, "success"));
         }
-
     } catch (e) {
         console.log(e);
     }
