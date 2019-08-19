@@ -8,15 +8,16 @@ export const getAnnouncements = name => async dispatch => {
     } catch (e) {}
 };
 
-export const addAnnouncement = data => async dispatch => {
+export const addAnnouncement = (data, name, history) => async dispatch => {
     try {
         let res = await axios.post(`/api/private/announcement/add`, data);
-
+        console.log(res.data);
         if (!res.data.success) {
             res.data.errors.map(error =>
                 dispatch(setAlert(error.msg, "danger"))
             );
         } else {
+            history.push(`/announcements/${name}`);
             dispatch(setAlert(res.data.msg, "success"));
         }
     } catch (e) {

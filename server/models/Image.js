@@ -22,6 +22,10 @@ const ImageSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Announcement"
     },
+    type: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now

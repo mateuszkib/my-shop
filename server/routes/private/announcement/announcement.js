@@ -118,17 +118,22 @@ router.post("/add", auth, upload.any(), async (req, res) => {
                     fileName,
                     fileType: file.mimetype,
                     categoryID: category[0]._id,
-                    announcementID: advert._id
+                    announcementID: advert._id,
+                    type: "advert"
                 });
 
                 newFile.save();
+            });
+            res.json({
+                success: true,
+                msg: "Advertisement successfully added"
             });
         })
         .catch(err => {
             console.log(err);
             return res.json({
                 success: false,
-                message: "Error occurred with add advertisement"
+                msg: "Error occurred with add advertisement"
             });
         });
 });

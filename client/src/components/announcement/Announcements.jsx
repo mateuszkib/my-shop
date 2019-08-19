@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { getAnnouncements } from "../../actions/announcement";
 import { Link } from "react-router-dom";
+import Alert from "../layouts/Alert";
 
 const Announcement = ({ getAnnouncements, match }) => {
     const category = match.params.category;
@@ -12,6 +13,11 @@ const Announcement = ({ getAnnouncements, match }) => {
 
     return (
         <div className={"container-fluid"}>
+            <div className={"row"}>
+                <div className={"col-lg-6 offset-lg-3"}>
+                    <Alert />
+                </div>
+            </div>
             <div className={"row mt-5 text-right"}>
                 <div className={"col"}>
                     <Link
