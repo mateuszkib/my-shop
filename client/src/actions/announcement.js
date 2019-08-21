@@ -4,7 +4,8 @@ import axios from "axios";
 
 export const getAnnouncements = name => async dispatch => {
     try {
-        const res = await axios.get(`/api/announcement/${name}`);
+        const res = await axios.get(`/api/announcements/${name}`);
+        console.log(res.data);
     } catch (e) {}
 };
 

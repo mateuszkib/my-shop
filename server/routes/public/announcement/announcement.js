@@ -3,13 +3,14 @@ const router = express.Router();
 
 // Load models
 const Advertisement = require("../../../models/Announcement");
+const Category = require("../../../models/Category");
 
 router.get("/", (req, res) => {
     Advertisement.find()
-        .then(() => {
+        .then(adverts => {
             return res.json({
                 success: true,
-                message: "successGetAllAdvertisement"
+                msg: "List of advertisements successfully get"
             });
         })
         .catch(err => {
@@ -21,15 +22,13 @@ router.get("/", (req, res) => {
         });
 });
 
-router.get("/:name", (req, res) => {
+router.get("/:name", async (req, res) => {
     const categoryName = req.params.name;
-    Advertisement.find({ name: categoryName })
-        .then(adv => {
-            console.log(adv);
-        })
-        .catch(err => {
-            console.log(err);
-        });
+    let category = await Category.find({ name: categoryName });
+    let advertisements = await Advertisement.find({
+        categoryID: category[0]._id
+    });
+    console.log(advertisements);
 });
 
 module.exports = router;

@@ -123,13 +123,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
     };
 
     const iconBack = {
-        position: "relative",
-        "&::before": {
-            content: `f060`,
-            position: "absolute",
-            width: "20",
-            height: "20"
-        }
+        ":before": { content: "hee" }
     };
 
     const thumbs = files.map((file, index) =>
@@ -200,10 +194,9 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
                 <div className={"col col-lg-3"}>
                     <Link
                         to={`/announcements/${match.params.category}`}
-                        className={"btn btn-info"}
-                        style={iconBack}
+                        className={"btn btn-info icon back-button"}
                     >
-                        Back to Advertisement
+                        Back to Advertisements
                     </Link>
                 </div>
             </div>

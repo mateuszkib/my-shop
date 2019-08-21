@@ -37,7 +37,7 @@ db.connect(config.mongoUri);
 // Public routes
 app.use("/api/auth", auth);
 app.use("/api/user", user);
-app.use("/api/announcement", announcement);
+app.use("/api/announcements", announcement);
 app.use("/api/categories", categories);
 
 // Private routes
