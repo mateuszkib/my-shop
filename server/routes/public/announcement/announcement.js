@@ -24,11 +24,14 @@ router.get("/", (req, res) => {
 
 router.get("/:name", async (req, res) => {
     const categoryName = req.params.name;
-    let category = await Category.find({ name: categoryName });
+    let category = await Category.find({name: categoryName});
     let advertisements = await Advertisement.find({
         categoryID: category[0]._id
     });
-    console.log(advertisements);
+    res.json({
+        success: true,
+        data: advertisements
+    })
 });
 
 module.exports = router;

@@ -1,18 +1,25 @@
-import { ADD_ANNOUNCEMENT } from "./types";
-import { setAlert } from "./alert";
+import {GET_ANNOUNCEMENTS} from "./types";
+import {setAlert} from "./alert";
 import axios from "axios";
 
 export const getAnnouncements = name => async dispatch => {
     try {
         const res = await axios.get(`/api/announcements/${name}`);
-        console.log(res.data);
-    } catch (e) {}
+
+        if (res.data.success) {
+            dispatch({
+                type: GET_ANNOUNCEMENTS,
+                payload: res.data.data
+            })
+        }
+
+    } catch (e) {
+    }
 };
 
 export const addAnnouncement = (data, name, history) => async dispatch => {
     try {
         let res = await axios.post(`/api/private/announcement/add`, data);
-        console.log(res.data);
         if (!res.data.success) {
             res.data.errors.map(error =>
                 dispatch(setAlert(error.msg, "danger"))

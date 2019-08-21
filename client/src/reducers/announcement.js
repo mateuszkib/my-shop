@@ -1,12 +1,12 @@
-import { GET_ANNOUNCEMENT, ADD_ANNOUNCEMENT } from "../actions/types";
+import {GET_ANNOUNCEMENTS, ADD_ANNOUNCEMENT} from "../actions/types";
 
 const initialState = [];
 
-export default function(state = initialState, action) {
-    const { type, payload } = action;
+export default function (state = initialState, action) {
+    const {type, payload} = action;
 
     switch (type) {
-        case GET_ANNOUNCEMENT:
+        case GET_ANNOUNCEMENTS:
             return {
                 payload
             };

@@ -1,15 +1,15 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { useDropzone } from "react-dropzone";
+import React, {useMemo, useState, useEffect} from "react";
+import {useDropzone} from "react-dropzone";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {connect} from "react-redux";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrashAlt, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import SelectFieldGroup from "../common/SelectFieldGroup";
-import { addAnnouncement } from "../../actions/announcement";
+import {addAnnouncement} from "../../actions/announcement";
 import Alert from "../layouts/Alert";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const baseStyle = {
     flex: 1,
@@ -39,7 +39,7 @@ const rejectStyle = {
     borderColor: "#ff1744"
 };
 
-const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
+const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
     const [files, setFiles] = useState([]);
     const [formData, setFormData] = useState({
         title: "",
@@ -123,14 +123,14 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
     };
 
     const iconBack = {
-        ":before": { content: "hee" }
+        ":before": {content: "hee"}
     };
 
     const thumbs = files.map((file, index) =>
         file.map((file, indexNested) => (
             <div style={thumb} key={file.name}>
                 <div style={thumbInner}>
-                    <img src={file.preview} style={img} alt={file.name} />
+                    <img src={file.preview} style={img} alt={file.name}/>
                     <FontAwesomeIcon
                         icon={faTrashAlt}
                         className="icon-hover"
@@ -145,7 +145,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
     );
 
     const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({...formData, [e.target.name]: e.target.value});
     };
 
     const onClickSubmit = e => {
@@ -169,7 +169,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
     };
 
     useEffect(() => {
-        setFormData({ ...formData, email: user ? user.email : "" });
+        setFormData({...formData, email: user ? user.email : ""});
         // Make sure to revoke the data uris to avoid memory leaks
         files.forEach(file => URL.revokeObjectURL(file.preview));
     }, [user]);
@@ -185,12 +185,12 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
     );
 
     const onChangeSelect = e => {
-        setFormData({ ...formData, duration: e.target.value });
+        setFormData({...formData, duration: e.target.value});
     };
 
     return (
         <section className="container">
-            <div className={"row"}>
+            <div className={"row mt-5"}>
                 <div className={"col col-lg-3"}>
                     <Link
                         to={`/announcements/${match.params.category}`}
@@ -200,7 +200,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
                     </Link>
                 </div>
             </div>
-            <Alert />
+            <Alert/>
             <div className="row justify-content-md-center">
                 <div className="col col-lg-6 mt-5">
                     <TextFieldGroup
@@ -215,9 +215,9 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
                         placeholder={"Description..."}
                         onChange={onChange}
                     />
-                    <hr />
+                    <hr/>
                     <h4>Upload images</h4>
-                    <div {...getRootProps({ style })}>
+                    <div {...getRootProps({style})}>
                         <input {...getInputProps()} />
                         <p>
                             Przeciągnij i upuść plik, albo kliknij aby wybrać
@@ -225,7 +225,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
                         </p>
                     </div>
                     <div style={thumbsContainer}>{thumbs}</div>
-                    <hr />
+                    <hr/>
                     <TextFieldGroup
                         type={"text"}
                         name={"localization"}
@@ -259,7 +259,7 @@ const AddAnnouncementForm = ({ user, addAnnouncement, match, history }) => {
                         value={formData.duration}
                         durations={durations}
                     />
-                    <hr />
+                    <hr/>
                     <div className="text-right mb-5">
                         <button
                             className="btn btn-block btn-dark"
@@ -285,5 +285,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { addAnnouncement }
+    {addAnnouncement}
 )(AddAnnouncementForm);
