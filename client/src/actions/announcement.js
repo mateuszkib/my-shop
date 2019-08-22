@@ -1,5 +1,5 @@
-import {GET_ANNOUNCEMENTS} from "./types";
-import {setAlert} from "./alert";
+import { GET_ANNOUNCEMENTS } from "./types";
+import { setAlert } from "./alert";
 import axios from "axios";
 
 export const getAnnouncements = name => async dispatch => {
@@ -10,11 +10,9 @@ export const getAnnouncements = name => async dispatch => {
             dispatch({
                 type: GET_ANNOUNCEMENTS,
                 payload: res.data.data
-            })
+            });
         }
-
-    } catch (e) {
-    }
+    } catch (e) {}
 };
 
 export const addAnnouncement = (data, name, history) => async dispatch => {
@@ -31,4 +29,13 @@ export const addAnnouncement = (data, name, history) => async dispatch => {
     } catch (e) {
         console.log(e);
     }
+};
+
+export const getMainImageAdvertisement = advertisementID => async dispatch => {
+    try {
+        let res = await axios.get(
+            `/api/announcements/image/${advertisementID}`
+        );
+        console.log(res);
+    } catch {}
 };
