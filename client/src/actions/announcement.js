@@ -1,5 +1,5 @@
-import { GET_ANNOUNCEMENTS } from "./types";
-import { setAlert } from "./alert";
+import {GET_ANNOUNCEMENTS} from "./types";
+import {setAlert} from "./alert";
 import axios from "axios";
 
 export const getAnnouncements = name => async dispatch => {
@@ -12,7 +12,8 @@ export const getAnnouncements = name => async dispatch => {
                 payload: res.data.data
             });
         }
-    } catch (e) {}
+    } catch (e) {
+    }
 };
 
 export const addAnnouncement = (data, name, history) => async dispatch => {
@@ -34,8 +35,11 @@ export const addAnnouncement = (data, name, history) => async dispatch => {
 export const getMainImageAdvertisement = advertisementID => async dispatch => {
     try {
         let res = await axios.get(
-            `/api/announcements/image/${advertisementID}`
-        );
-        console.log(res);
-    } catch {}
+            `/api/announcements/image/${advertisementID}`, {
+                responseType: "arraybuffer"
+            });
+
+        return res;
+    } catch {
+    }
 };

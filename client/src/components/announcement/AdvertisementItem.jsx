@@ -1,12 +1,27 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import moment from "moment";
-import { getMainImageAdvertisement } from "../../actions/announcement";
+import {getMainImageAdvertisement} from "../../actions/announcement";
 
-const AdvertisementItem = ({ advertisement, getMainImageAdvertisement }) => {
+const AdvertisementItem = ({advertisement, getMainImageAdvertisement}) => {
+    const [image, setImage] = useState("");
+    const [imageType, setImageType] = useState("");
+
     useEffect(() => {
-        getMainImageAdvertisement(advertisement._id);
+        let mainImage = getMainImageAdvertisement(advertisement._id);
+        mainImage.then(image => {
+            const data = image.data;
+            setImageType(image.headers["content-type"]);
+
+            const base64 = btoa(
+                new Uint8Array(data).reduce(
+                    (data, byte) => data + String.fromCharCode(byte),
+                    ""
+                )
+            );
+            setImage(base64);
+        });
     }, []);
 
     return (
@@ -14,7 +29,10 @@ const AdvertisementItem = ({ advertisement, getMainImageAdvertisement }) => {
             <a href="#" className="list-group-item list-group-item-action">
                 <div className={"container"}>
                     <div className={"row"}>
-                        <div className={"col-lg-2"}>E</div>
+                        <div className={"col-lg-3"}>
+                            <img src={"data:" + {imageType} + ";base64," + image}
+                                 alt={""} width={200} height={200}/>
+                        </div>
                         <div className={"col-lg-6"}>E</div>
                         <div className={"col-lg-3"}>E</div>
                     </div>
@@ -51,5 +69,5 @@ AdvertisementItem.propTypes = {};
 
 export default connect(
     null,
-    { getMainImageAdvertisement }
+    {getMainImageAdvertisement}
 )(AdvertisementItem);
