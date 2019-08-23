@@ -1,26 +1,28 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import moment from "moment";
-import {getMainImageAdvertisement} from "../../actions/announcement";
+import { getMainImageAdvertisement } from "../../actions/announcement";
 
-const AdvertisementItem = ({advertisement, getMainImageAdvertisement}) => {
+const AdvertisementItem = ({ advertisement, getMainImageAdvertisement }) => {
     const [image, setImage] = useState("");
     const [imageType, setImageType] = useState("");
 
     useEffect(() => {
         let mainImage = getMainImageAdvertisement(advertisement._id);
         mainImage.then(image => {
-            const data = image.data;
-            setImageType(image.headers["content-type"]);
+            if (image) {
+                const data = image.data;
+                setImageType(image.headers["content-type"]);
 
-            const base64 = btoa(
-                new Uint8Array(data).reduce(
-                    (data, byte) => data + String.fromCharCode(byte),
-                    ""
-                )
-            );
-            setImage(base64);
+                const base64 = btoa(
+                    new Uint8Array(data).reduce(
+                        (data, byte) => data + String.fromCharCode(byte),
+                        ""
+                    )
+                );
+                setImage(base64);
+            }
         });
     }, []);
 
@@ -30,11 +32,31 @@ const AdvertisementItem = ({advertisement, getMainImageAdvertisement}) => {
                 <div className={"container"}>
                     <div className={"row"}>
                         <div className={"col-lg-3"}>
-                            <img src={"data:" + {imageType} + ";base64," + image}
-                                 alt={""} width={200} height={200}/>
+                            <img
+                                src={
+                                    "data:" + { imageType } + ";base64," + image
+                                }
+                                alt={""}
+                                width={200}
+                                height={150}
+                            />
                         </div>
-                        <div className={"col-lg-6"}>E</div>
-                        <div className={"col-lg-3"}>E</div>
+                        <div className={"col-lg-6"}>
+                            <p>{advertisement.title}</p>
+                        </div>
+                        <div
+                            className={
+                                "d-flex flex-column justify-content-end col-lg-3"
+                            }
+                        >
+                            <p>
+                                {advertisement.contactDetails[0].localization +
+                                    ", " +
+                                    moment(advertisement.createdAt).format(
+                                        "lll"
+                                    )}
+                            </p>
+                        </div>
                     </div>
                 </div>
                 {/* <div className={"d-flex flex-row justify-content-between"}>
@@ -69,5 +91,5 @@ AdvertisementItem.propTypes = {};
 
 export default connect(
     null,
-    {getMainImageAdvertisement}
+    { getMainImageAdvertisement }
 )(AdvertisementItem);

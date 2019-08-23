@@ -23,6 +23,10 @@ const AdvertisementSchema = new Schema({
         type: String,
         required: true
     },
+    price: {
+        type: Number,
+        required: true
+    },
     contactDetails: [Contact.schema],
     createdAt: {
         type: Date,

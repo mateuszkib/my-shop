@@ -14,7 +14,7 @@ const ContactDetailSchema = new Schema({
         type: String
     },
     telephoneNumber: {
-        type: String
+        type: Number
     },
     createdAt: {
         type: Date,
