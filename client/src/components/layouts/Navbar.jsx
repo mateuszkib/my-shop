@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
+import React, {Fragment} from "react";
 import logo from "../../images/logo.png";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { logout } from "../../actions/auth";
+import {connect} from "react-redux";
+import {logout} from "../../actions/auth";
 
-const Navbar = ({ user, logout }) => {
+const Navbar = ({user, logout}) => {
     const handleClickLogout = () => {
         logout();
     };
@@ -14,12 +14,12 @@ const Navbar = ({ user, logout }) => {
         <ul className="navbar-nav ml-auto">
             <li className="nav-item active">
                 <Link to="/register" className="nav-link">
-                    Register
+                    Rejestracja
                 </Link>
             </li>
             <li className="nav-item active">
                 <Link to="/login" className="nav-link">
-                    Login
+                    Logowanie
                 </Link>
             </li>
         </ul>
@@ -38,7 +38,7 @@ const Navbar = ({ user, logout }) => {
                             className={"rounded-circle"}
                         />
                     )}{" "}
-                    Profile
+                    Profil
                 </Link>
             </li>
             <li className="nav-item active">
@@ -47,7 +47,7 @@ const Navbar = ({ user, logout }) => {
                     className="nav-link"
                     onClick={handleClickLogout}
                 >
-                    Logout
+                    Wyloguj
                 </Link>
             </li>
         </ul>
@@ -57,7 +57,7 @@ const Navbar = ({ user, logout }) => {
         <Fragment>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <Link to="/">
-                    <img className={"logo"} src={logo} alt={logo} />
+                    <img className={"logo"} src={logo} alt={logo}/>
                 </Link>
                 <button
                     className="navbar-toggler"
@@ -68,13 +68,13 @@ const Navbar = ({ user, logout }) => {
                     aria-expanded="false"
                     aria-label="Toggle navigation"
                 >
-                    <span className="navbar-toggler-icon" />
+                    <span className="navbar-toggler-icon"/>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
                             <Link to="/" className="nav-link">
-                                Home <span className="sr-only">(current)</span>
+                                Strona główna <span className="sr-only">(current)</span>
                             </Link>
                         </li>
                     </ul>
@@ -95,5 +95,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { logout }
+    {logout}
 )(Navbar);

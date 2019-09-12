@@ -7,6 +7,7 @@ import {faTrashAlt, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import SelectFieldGroup from "../common/SelectFieldGroup";
+import RadioFieldGroup from "../common/RadioFieldGroup";
 import {addAnnouncement} from "../../actions/announcement";
 import Alert from "../layouts/Alert";
 import {Link} from "react-router-dom";
@@ -47,11 +48,15 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
         localization: "",
         email: "",
         name: "",
-        telephoneNumber: "",
-        duration: "3 days"
+        number: "",
+        duration: "3 dni",
+        price: "",
+        type: ""
     });
 
-    const durations = ["3 days", "1 week", "2 week", "1 month"];
+    const durations = ["3 dni", "1 tydzień", "2 tygodnie", "1 miesiąc"];
+    const types = ["Sprzedam", "Kupię", "Zamienię"];
+    const conditions = ["Nowy", "Używany"];
 
     const multiple = true;
     const {
@@ -74,15 +79,6 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
             ]);
         }
     });
-
-    const handleDeleteImageClick = (indexNested, index) => {
-        files.map((file, i) => {
-            if (i === index) {
-                file.splice(indexNested, 1);
-            }
-        });
-        setFiles([...files]);
-    };
 
     const thumbsContainer = {
         display: "flex",
@@ -122,10 +118,6 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
         color: "#ff6666"
     };
 
-    const iconBack = {
-        ":before": {content: "hee"}
-    };
-
     const thumbs = files.map((file, index) =>
         file.map((file, indexNested) => (
             <div style={thumb} key={file.name}>
@@ -143,6 +135,19 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
             </div>
         ))
     );
+
+    const handleDeleteImageClick = (indexNested, index) => {
+        files.map((file, i) => {
+            if (i === index) {
+                file.splice(indexNested, 1);
+            }
+        });
+        setFiles([...files]);
+    };
+
+    const handleRadioInputChange = e => {
+        setFormData({...formData, type: e.target.value});
+    };
 
     const onChange = e => {
         setFormData({...formData, [e.target.name]: e.target.value});
@@ -174,6 +179,7 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
         files.forEach(file => URL.revokeObjectURL(file.preview));
     }, [user]);
 
+
     const style = useMemo(
         () => ({
             ...baseStyle,
@@ -194,9 +200,9 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
                 <div className={"col col-lg-3"}>
                     <Link
                         to={`/announcements/${match.params.category}`}
-                        className={"btn btn-info icon back-button"}
+                        className={"btn btn-info icon back-button mb-5"}
                     >
-                        Back to Advertisements
+                        Przejdź do ogłoszeń
                     </Link>
                 </div>
             </div>
@@ -205,18 +211,38 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
                 <div className="col col-lg-6 mt-5">
                     <TextFieldGroup
                         name={"title"}
-                        placeholder={"Title..."}
+                        placeholder={"Tytuł..."}
                         type={"text"}
                         onChange={onChange}
                     />
+                    <div className={"col-lg-12"}>
+                        <div className={"row mb-3 align-items-center"}>
+                            <RadioFieldGroup
+                                types={types}
+                                onChange={handleRadioInputChange}
+                            />
+                            <TextFieldGroup
+                                className={'w-50 mb-0'}
+                                name={"price"}
+                                placeholder={"Cena..."}
+                                type={"text"}
+                                onChange={onChange}
+                                currency={'Zł'}
+                                disabled={formData.type === 'Kupię' || formData.type === "Zamienię"}
+                            />
+                        </div>
+                    </div>
+
+                    <SelectFieldGroup options={conditions}/>
+
                     <TextAreaFieldGroup
                         name={"description"}
                         rows={10}
-                        placeholder={"Description..."}
+                        placeholder={"Opis..."}
                         onChange={onChange}
                     />
                     <hr/>
-                    <h4>Upload images</h4>
+                    <h4>Dodaj zdjęcia</h4>
                     <div {...getRootProps({style})}>
                         <input {...getInputProps()} />
                         <p>
@@ -229,12 +255,12 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
                     <TextFieldGroup
                         type={"text"}
                         name={"localization"}
-                        placeholder={"Localization..."}
+                        placeholder={"Lokalizacja..."}
                         onChange={onChange}
                     />
                     <TextFieldGroup
                         name={"name"}
-                        placeholder={"Name..."}
+                        placeholder={"Imię..."}
                         type={"text"}
                         onChange={onChange}
                     />
@@ -248,16 +274,16 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
                     />
                     <TextFieldGroup
                         type={"text"}
-                        name={"telephoneNumber"}
-                        placeholder={"Telephone number..."}
+                        name={"number"}
+                        placeholder={"Numer telefonu..."}
                         onChange={onChange}
                         value={formData.telephoneNumber}
                     />
-                    <h4>Duration</h4>
+                    <h4>Czas trwania</h4>
                     <SelectFieldGroup
                         onChange={onChangeSelect}
                         value={formData.duration}
-                        durations={durations}
+                        options={durations}
                     />
                     <hr/>
                     <div className="text-right mb-5">
@@ -265,7 +291,7 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
                             className="btn btn-block btn-dark"
                             onClick={onClickSubmit}
                         >
-                            Add
+                            Dodaj
                         </button>
                     </div>
                 </div>
@@ -280,7 +306,7 @@ AddAnnouncementForm.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    user: state.auth.user
+    user: state.auth.user,
 });
 
 export default connect(

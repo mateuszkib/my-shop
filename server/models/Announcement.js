@@ -27,6 +27,14 @@ const AdvertisementSchema = new Schema({
         type: Number,
         required: true
     },
+    type: {
+        type: String,
+        required: true
+    },
+    condition: {
+        type: String,
+        required: true
+    },
     contactDetails: [Contact.schema],
     createdAt: {
         type: Date,

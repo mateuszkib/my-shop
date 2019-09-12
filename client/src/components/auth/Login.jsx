@@ -31,7 +31,7 @@ const Login = ({auth, login}) => {
         <div className="container add-category-form mt-5">
             <Alert/>
             <article className="card-body mx-auto col" style={{"maxWidth": "600px"}}>
-                <h4 className="card-title mt-3 text-center">Login</h4>
+                <h4 className="card-title mt-3 text-center">Logowanie</h4>
                 <form onSubmit={onSubmit}>
                     <TextFieldGroup placeholder={'Email...'} name={'email'} type={'text'} value={formData.email}
                                     icon={faEnvelope} onChange={onChange}/>
@@ -41,7 +41,7 @@ const Login = ({auth, login}) => {
                                     icon={faLock} onChange={onChange}/>
 
                     <div className="form-group">
-                        <button type="submit" className="btn btn-light btn-block font-weight-bold">Sign In
+                        <button type="submit" className="btn btn-light btn-block font-weight-bold">Zaloguj
                         </button>
                     </div>
 

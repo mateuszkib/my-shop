@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import moment from "moment";
-import { getMainImageAdvertisement } from "../../actions/announcement";
+import {getMainImageAdvertisement} from "../../actions/announcement";
 
-const AdvertisementItem = ({ advertisement, getMainImageAdvertisement }) => {
+const AnnouncementItem = ({announcement, getMainImageAdvertisement}) => {
     const [image, setImage] = useState("");
     const [imageType, setImageType] = useState("");
 
     useEffect(() => {
-        let mainImage = getMainImageAdvertisement(advertisement._id);
+        let mainImage = getMainImageAdvertisement(announcement._id);
         mainImage.then(image => {
             if (image) {
                 const data = image.data;
@@ -34,7 +34,7 @@ const AdvertisementItem = ({ advertisement, getMainImageAdvertisement }) => {
                         <div className={"col-lg-3"}>
                             <img
                                 src={
-                                    "data:" + { imageType } + ";base64," + image
+                                    "data:" + {imageType} + ";base64," + image
                                 }
                                 alt={""}
                                 width={200}
@@ -42,19 +42,20 @@ const AdvertisementItem = ({ advertisement, getMainImageAdvertisement }) => {
                             />
                         </div>
                         <div className={"col-lg-6"}>
-                            <p>{advertisement.title}</p>
+                            <p>{announcement.title}</p>
                         </div>
                         <div
                             className={
-                                "d-flex flex-column justify-content-end col-lg-3"
+                                "d-flex flex-column justify-content-between col-lg-3"
                             }
                         >
-                            <p>
-                                {advertisement.contactDetails[0].localization +
-                                    ", " +
-                                    moment(advertisement.createdAt).format(
-                                        "lll"
-                                    )}
+                            <p className={'text-right'}>{announcement.contactDetails[0].telephoneNumber + " " + "zł"}</p>
+                            <p className={'text-right'}>
+                                {announcement.contactDetails[0].localization +
+                                ", " +
+                                moment(announcement.createdAt).format(
+                                    "lll"
+                                )}
                             </p>
                         </div>
                     </div>
@@ -87,9 +88,9 @@ const AdvertisementItem = ({ advertisement, getMainImageAdvertisement }) => {
     );
 };
 
-AdvertisementItem.propTypes = {};
+AnnouncementItem.propTypes = {};
 
 export default connect(
     null,
-    { getMainImageAdvertisement }
-)(AdvertisementItem);
+    {getMainImageAdvertisement}
+)(AnnouncementItem);

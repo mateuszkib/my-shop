@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { getAnnouncements } from "../../actions/announcement";
-import { Link } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {connect} from "react-redux";
+import {getAnnouncements} from "../../actions/announcement";
+import {Link} from "react-router-dom";
 import Alert from "../layouts/Alert";
-import AdvertisementItem from "./AdvertisementItem";
+import AnnouncementItem from "./AnnouncementItem";
 
-const Announcement = ({ getAnnouncements, match, advertisements }) => {
+const Announcement = ({getAnnouncements, match, announcements}) => {
     const category = match.params.category;
 
     useEffect(() => {
@@ -16,33 +16,33 @@ const Announcement = ({ getAnnouncements, match, advertisements }) => {
         <div className={"container"}>
             <div className={"row"}>
                 <div className={"col-lg-6 offset-lg-3"}>
-                    <Alert />
+                    <Alert/>
                 </div>
             </div>
             <div className={"row mt-5 justify-content-between"}>
                 <div className={"col-lg-2"}>
                     <Link to={`/`} className={"btn btn-info icon back-button"}>
-                        Back to Home
+                        Powrót
                     </Link>
                 </div>
-                <div className={"col-lg-2"}>
+                <div className={"col-lg-3 text-right"}>
                     <Link
                         to={`/announcement/${category}/add`}
-                        className={"btn btn-success"}
+                        className={"btn btn-success add-before-icon"}
                     >
-                        Add advertisement
+                        Dodaj ogłoszenie
                     </Link>
                 </div>
             </div>
             <div className={"row mt-5"}>
                 <div className={"col-lg-12"}>
                     <div className="list-group">
-                        {advertisements.payload &&
-                            advertisements.payload.map(advertisement => (
-                                <AdvertisementItem
-                                    advertisement={advertisement}
-                                />
-                            ))}
+                        {announcements.payload &&
+                        announcements.payload.map(announcement => (
+                            <AnnouncementItem
+                                announcement={announcement}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
@@ -51,10 +51,10 @@ const Announcement = ({ getAnnouncements, match, advertisements }) => {
 };
 
 const mapStateToProps = state => ({
-    advertisements: state.advertisements
+    announcements: state.advertisements
 });
 
 export default connect(
     mapStateToProps,
-    { getAnnouncements }
+    {getAnnouncements}
 )(Announcement);

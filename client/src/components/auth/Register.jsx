@@ -36,9 +36,9 @@ const Register = ({setAlert, register, isRegister}) => {
         <div className="container add-category-form mt-5">
             <Alert/>
             <article className="card-body mx-auto col" style={{"maxWidth": "600px"}}>
-                <h4 className="card-title mt-3 text-center">Register account</h4>
+                <h4 className="card-title mt-3 text-center">Rejestracja</h4>
                 <form onSubmit={onSubmit}>
-                    <TextFieldGroup name="name" placeholder={'Name account..'} type='text' onChange={onChange}
+                    <TextFieldGroup name="name" placeholder={'Nazwa konta..'} type='text' onChange={onChange}
                                     value={formData.name} icon={faUser}
                     />
 
@@ -46,21 +46,21 @@ const Register = ({setAlert, register, isRegister}) => {
                                     value={formData.email} icon={faEnvelope}
                     />
 
-                    <TextFieldGroup name="password" placeholder={'Password..'} type='password' onChange={onChange}
+                    <TextFieldGroup name="password" placeholder={'Hasło..'} type='password' onChange={onChange}
                                     value={formData.password} icon={faLock}
                     />
 
-                    <TextFieldGroup name="passwordConfirm" placeholder={'Confirm password..'} type='password'
+                    <TextFieldGroup name="passwordConfirm" placeholder={'Powtórz hasło..'} type='password'
                                     onChange={onChange}
                                     value={formData.passwordConfirm} icon={faLock}
                     />
 
                     <div className="form-group">
-                        <button type="submit" className="btn btn-light btn-block font-weight-bold">Register
+                        <button type="submit" className="btn btn-light btn-block font-weight-bold">Zarejestruj
                         </button>
                     </div>
 
-                    <p className="text-center">Do you have account? <Link to="/login">Sign In</Link></p>
+                    <p className="text-center">Masz konto? <Link to="/login">Zaloguj się</Link></p>
                 </form>
             </article>
         </div>
