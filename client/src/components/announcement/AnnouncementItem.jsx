@@ -2,11 +2,15 @@ import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import moment from "moment";
+import 'moment/locale/pl';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faMapMarkerAlt, faClock} from '@fortawesome/free-solid-svg-icons'
 import {getMainImageAdvertisement} from "../../actions/announcement";
 
 const AnnouncementItem = ({announcement, getMainImageAdvertisement}) => {
     const [image, setImage] = useState("");
     const [imageType, setImageType] = useState("");
+    moment().locale('pl');
 
     useEffect(() => {
         let mainImage = getMainImageAdvertisement(announcement._id);
@@ -41,22 +45,23 @@ const AnnouncementItem = ({announcement, getMainImageAdvertisement}) => {
                                 height={150}
                             />
                         </div>
-                        <div className={"col-lg-6"}>
+                        <div className={"col-lg-5"}>
                             <p>{announcement.title}</p>
                         </div>
                         <div
                             className={
-                                "d-flex flex-column justify-content-between col-lg-3"
+                                "d-flex flex-column justify-content-between col-lg-4"
                             }
                         >
                             <p className={'text-right'}>{announcement.contactDetails[0].telephoneNumber + " " + "zł"}</p>
-                            <p className={'text-right'}>
-                                {announcement.contactDetails[0].localization +
-                                ", " +
-                                moment(announcement.createdAt).format(
-                                    "lll"
-                                )}
-                            </p>
+                            <div>
+                                <FontAwesomeIcon icon={faMapMarkerAlt} className={'mr-1'} style={{'color': '#000099'}}/>
+                                <p className={'text-right d-inline mr-5'}>
+                                    {announcement.contactDetails[0].localization}
+                                </p>
+                                <FontAwesomeIcon icon={faClock} className={'mr-1'} style={{'color': '#000099'}}/>
+                                <p className={'d-inline'}>{moment(announcement.createdAt).format('ll')}</p>
+                            </div>
                         </div>
                     </div>
                 </div>

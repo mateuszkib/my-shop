@@ -233,7 +233,14 @@ const AddAnnouncementForm = ({user, addAnnouncement, match, history}) => {
                         </div>
                     </div>
 
-                    <SelectFieldGroup options={conditions}/>
+                    <div className={"col-lg-12"}>
+                        <div className={'row'}>
+                            <p className={'pt-1 mr-2'}>Stan:</p>
+                            <div className={'mb-3 w-50'}>
+                                <SelectFieldGroup options={conditions}/>
+                            </div>
+                        </div>
+                    </div>
 
                     <TextAreaFieldGroup
                         name={"description"}
