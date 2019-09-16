@@ -25,10 +25,10 @@ router.get("/", (req, res) => {
 
 router.get("/:name", async (req, res) => {
     const categoryName = req.params.name;
-    let category = await Category.find({ name: categoryName });
+    let category = await Category.find({name: categoryName});
     let advertisements = await Advertisement.find({
         categoryID: category[0]._id
-    }).sort({ createdAt: -1 });
+    }).sort({createdAt: -1});
     res.json({
         success: true,
         data: advertisements
@@ -40,7 +40,6 @@ router.get("/image/:advertisementID", async (req, res) => {
         announcementID: req.params.advertisementID
     });
     if (image) {
-        console.log(image);
         let mainImage = image.shift();
         if (mainImage) {
             let path =

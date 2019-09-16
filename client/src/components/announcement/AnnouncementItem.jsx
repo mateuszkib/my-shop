@@ -1,34 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import moment from "moment";
 import "moment/locale/pl";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkerAlt, faClock } from "@fortawesome/free-solid-svg-icons";
-import { getMainImageAdvertisement } from "../../actions/announcement";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faMapMarkerAlt, faClock} from "@fortawesome/free-solid-svg-icons";
+import {getMainImageAdvertisement} from "../../actions/announcement";
 
-const AnnouncementItem = ({ announcement, getMainImageAdvertisement }) => {
+const AnnouncementItem = ({announcement, getMainImageAdvertisement}) => {
     const [image, setImage] = useState("");
     const [imageType, setImageType] = useState("");
     moment().locale("pl");
 
     useEffect(() => {
-        let mainImage = getMainImageAdvertisement(announcement._id);
-        mainImage.then(image => {
-            if (image) {
-                const data = image.data;
-                setImageType(image.headers["content-type"]);
+        if (announcement) {
+            let mainImage = getMainImageAdvertisement(announcement._id);
+            mainImage.then(image => {
+                if (image) {
+                    const data = image.data;
+                    setImageType(image.headers["content-type"]);
 
-                const base64 = btoa(
-                    new Uint8Array(data).reduce(
-                        (data, byte) => data + String.fromCharCode(byte),
-                        ""
-                    )
-                );
-                setImage(base64);
-            }
-        });
-    }, []);
+                    const base64 = btoa(
+                        new Uint8Array(data).reduce(
+                            (data, byte) => data + String.fromCharCode(byte),
+                            ""
+                        )
+                    );
+                    setImage(base64);
+                }
+            });
+        }
+    }, [announcement]);
 
     return (
         <div className="list-group mb-2">
@@ -38,7 +40,7 @@ const AnnouncementItem = ({ announcement, getMainImageAdvertisement }) => {
                         <div className={"col-lg-3"}>
                             <img
                                 src={
-                                    "data:" + { imageType } + ";base64," + image
+                                    "data:" + {imageType} + ";base64," + image
                                 }
                                 alt={""}
                                 width={200}
@@ -60,7 +62,7 @@ const AnnouncementItem = ({ announcement, getMainImageAdvertisement }) => {
                                 <FontAwesomeIcon
                                     icon={faMapMarkerAlt}
                                     className={"mr-1"}
-                                    style={{ color: "#000099" }}
+                                    style={{color: "#000099"}}
                                 />
                                 <p className={"text-right d-inline mr-5"}>
                                     {
@@ -71,7 +73,7 @@ const AnnouncementItem = ({ announcement, getMainImageAdvertisement }) => {
                                 <FontAwesomeIcon
                                     icon={faClock}
                                     className={"mr-1"}
-                                    style={{ color: "#000099" }}
+                                    style={{color: "#000099"}}
                                 />
                                 <p className={"d-inline"}>
                                     {moment(announcement.createdAt).format(
@@ -114,5 +116,5 @@ AnnouncementItem.propTypes = {};
 
 export default connect(
     null,
-    { getMainImageAdvertisement }
+    {getMainImageAdvertisement}
 )(AnnouncementItem);

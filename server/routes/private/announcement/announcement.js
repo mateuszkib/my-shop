@@ -5,8 +5,9 @@ const empty = require("is-empty");
 const fs = require("fs");
 const config = require("../../../config/config");
 const auth = require("../../../middleware/auth");
-const { updatedDiff } = require("deep-object-diff");
+const {updatedDiff} = require("deep-object-diff");
 const multer = require("multer");
+const sharp = require("sharp");
 const upload = multer({
     dest: "tmp/"
 });
@@ -20,12 +21,13 @@ const Image = require("../../../models/Image");
 const validationInputAddAdvertisement = require("../../../validation/validationInputAddAdvertisement");
 
 router.post("/add", auth, upload.any(), async (req, res) => {
-    const { errors } = validationInputAddAdvertisement(req.body);
+    const {errors} = validationInputAddAdvertisement(req.body);
     let duration = req.body.duration;
     let expiredAdvert = new Date();
-    let category = await Category.find({ name: req.body.category });
+    let category = await Category.find({name: req.body.category});
     let folder = config.pathAdvertisementImage + `${req.user.id}`;
     let files = req.files;
+    let newPath = "";
 
     if (!empty(errors)) {
         return res.json({
@@ -34,12 +36,12 @@ router.post("/add", auth, upload.any(), async (req, res) => {
         });
     }
 
-    Advertisement.find({ title: req.body.title }).then(adv => {
+    Advertisement.find({title: req.body.title}).then(adv => {
         if (adv.length !== 0) {
             return res.json({
                 success: false,
                 errors: [
-                    { msg: "An advertisement with such a title already exists" }
+                    {msg: "An advertisement with such a title already exists"}
                 ]
             });
         }
@@ -85,7 +87,7 @@ router.post("/add", auth, upload.any(), async (req, res) => {
             ) {
                 fs.mkdir(
                     config.pathAdvertisementImage + `${req.user.id}`,
-                    { recursive: true },
+                    {recursive: true},
                     err => {
                         if (err) console.log(err);
                     }
@@ -93,44 +95,45 @@ router.post("/add", auth, upload.any(), async (req, res) => {
             }
 
             files.map(file => {
-                let path =
-                    config.pathAdvertisementImage +
-                    `${req.user.id}/` +
-                    file.originalname;
-                let fileName = file.originalname;
-                let i = 1;
-
-                while (fs.existsSync(path)) {
-                    path =
+                    let path =
                         config.pathAdvertisementImage +
                         `${req.user.id}/` +
-                        "(" +
-                        i +
-                        ")" +
                         file.originalname;
-                    fileName = "(" + i + ")" + file.originalname;
-                    i++;
+                    let fileName = file.originalname;
+                    let i = 1;
+
+                    while (fs.existsSync(path)) {
+                        path =
+                            config.pathAdvertisementImage +
+                            `${req.user.id}/` +
+                            "(" +
+                            i +
+                            ")" +
+                            file.originalname;
+                        fileName = "(" + i + ")" + file.originalname;
+                        i++;
+                    }
+
+                    fs.rename(file.path, path, err => {
+                        if (err) console.log(err);
+                    });
+
+                    const newFile = new Image({
+                        folder,
+                        fileName,
+                        fileType: file.mimetype,
+                        categoryID: category[0]._id,
+                        announcementID: advert._id,
+                        type: "advert"
+                    });
+
+                    newFile.save();
                 }
-
-                fs.rename(file.path, path, err => {
-                    if (err) console.log(err);
-                });
-
-                const newFile = new Image({
-                    folder,
-                    fileName,
-                    fileType: file.mimetype,
-                    categoryID: category[0]._id,
-                    announcementID: advert._id,
-                    type: "advert"
-                });
-
-                newFile.save();
-            });
-            res.json({
-                success: true,
-                msg: "Advertisement successfully added"
-            });
+            );
+            // res.json({
+            //     success: true,
+            //     msg: "Advertisement successfully added"
+            // });
         })
         .catch(err => {
             console.log(err);
@@ -143,9 +146,9 @@ router.post("/add", auth, upload.any(), async (req, res) => {
 
 router.post(
     "/edit/:id",
-    passport.authenticate("jwt", { session: false }),
+    passport.authenticate("jwt", {session: false}),
     (req, res) => {
-        const { errors } = validationInputAddAdvertisement(req.body);
+        const {errors} = validationInputAddAdvertisement(req.body);
         const advId = req.params.id;
 
         if (!empty(errors)) {
@@ -217,7 +220,7 @@ router.post(
 
 router.post(
     "/delete/:id",
-    passport.authenticate("jwt", { session: false }),
+    passport.authenticate("jwt", {session: false}),
     (req, res) => {
         const advId = req.params.id;
 

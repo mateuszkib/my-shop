@@ -25,8 +25,8 @@ export const addAnnouncement = (data, name, history) => async dispatch => {
                 }
             );
         } else {
-            history.push(`/announcements/${name}`);
             dispatch(setAlert(res.data.msg, "success"));
+            history.push(`/announcements/${name}`);
         }
     } catch (e) {
         console.log(e);

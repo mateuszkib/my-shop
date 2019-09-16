@@ -10,7 +10,7 @@ const Announcement = ({getAnnouncements, match, announcements}) => {
 
     useEffect(() => {
         getAnnouncements(category);
-    }, []);
+    }, [announcements]);
 
     return (
         <div className={"container"}>
