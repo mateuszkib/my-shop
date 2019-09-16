@@ -5,7 +5,7 @@ const empty = require("is-empty");
 const fs = require("fs");
 const config = require("../../../config/config");
 const auth = require("../../../middleware/auth");
-const {updatedDiff} = require("deep-object-diff");
+const { updatedDiff } = require("deep-object-diff");
 const multer = require("multer");
 const upload = multer({
     dest: "tmp/"
@@ -20,10 +20,10 @@ const Image = require("../../../models/Image");
 const validationInputAddAdvertisement = require("../../../validation/validationInputAddAdvertisement");
 
 router.post("/add", auth, upload.any(), async (req, res) => {
-    const {errors} = validationInputAddAdvertisement(req.body);
+    const { errors } = validationInputAddAdvertisement(req.body);
     let duration = req.body.duration;
     let expiredAdvert = new Date();
-    let category = await Category.find({name: req.body.category});
+    let category = await Category.find({ name: req.body.category });
     let folder = config.pathAdvertisementImage + `${req.user.id}`;
     let files = req.files;
 
@@ -34,28 +34,28 @@ router.post("/add", auth, upload.any(), async (req, res) => {
         });
     }
 
-    Advertisement.find({title: req.body.title}).then(adv => {
+    Advertisement.find({ title: req.body.title }).then(adv => {
         if (adv.length !== 0) {
             return res.json({
                 success: false,
                 errors: [
-                    {msg: "An advertisement with such a title already exists"}
+                    { msg: "An advertisement with such a title already exists" }
                 ]
             });
         }
     });
 
     switch (duration) {
-        case "3 days":
+        case "3 dni":
             expiredAdvert = expiredAdvert.setDate(expiredAdvert.getDate() + 3);
             break;
-        case "1 week":
+        case "1 tydzień":
             expiredAdvert = expiredAdvert.setDate(expiredAdvert.getDate() + 7);
             break;
-        case "2 week":
+        case "2 tygodnie":
             expiredAdvert = expiredAdvert.setDate(expiredAdvert.getDate() + 14);
             break;
-        case "1 month":
+        case "1 miesiąc":
             expiredAdvert = expiredAdvert.setDate(expiredAdvert.getDate() + 31);
     }
 
@@ -65,6 +65,8 @@ router.post("/add", auth, upload.any(), async (req, res) => {
         title: req.body.title,
         price: req.body.price,
         description: req.body.description,
+        type: req.body.type,
+        condition: req.body.condition,
         expiredAt: expiredAdvert
     });
 
@@ -83,7 +85,7 @@ router.post("/add", auth, upload.any(), async (req, res) => {
             ) {
                 fs.mkdir(
                     config.pathAdvertisementImage + `${req.user.id}`,
-                    {recursive: true},
+                    { recursive: true },
                     err => {
                         if (err) console.log(err);
                     }
@@ -141,9 +143,9 @@ router.post("/add", auth, upload.any(), async (req, res) => {
 
 router.post(
     "/edit/:id",
-    passport.authenticate("jwt", {session: false}),
+    passport.authenticate("jwt", { session: false }),
     (req, res) => {
-        const {errors} = validationInputAddAdvertisement(req.body);
+        const { errors } = validationInputAddAdvertisement(req.body);
         const advId = req.params.id;
 
         if (!empty(errors)) {
@@ -215,7 +217,7 @@ router.post(
 
 router.post(
     "/delete/:id",
-    passport.authenticate("jwt", {session: false}),
+    passport.authenticate("jwt", { session: false }),
     (req, res) => {
         const advId = req.params.id;
 

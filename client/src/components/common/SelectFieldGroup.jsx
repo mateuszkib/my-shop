@@ -1,9 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const SelectFieldGroup = ({options, onChange, value}) => {
+const SelectFieldGroup = ({ options, onChange, value, name }) => {
     return (
-        <select className="form-control" onChange={onChange} value={value}>
+        <select
+            className="form-control"
+            onChange={onChange}
+            name={name}
+            value={value}
+        >
             {options.map((option, key) => (
                 <option key={key}>{option}</option>
             ))}
@@ -14,7 +19,7 @@ const SelectFieldGroup = ({options, onChange, value}) => {
 SelectFieldGroup.propTypes = {
     options: PropTypes.array.isRequired,
     onChange: PropTypes.func,
-    value: PropTypes.string,
+    value: PropTypes.string
 };
 
 export default SelectFieldGroup;

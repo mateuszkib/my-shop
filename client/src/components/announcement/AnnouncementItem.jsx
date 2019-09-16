@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import moment from "moment";
-import 'moment/locale/pl';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faMapMarkerAlt, faClock} from '@fortawesome/free-solid-svg-icons'
-import {getMainImageAdvertisement} from "../../actions/announcement";
+import "moment/locale/pl";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMapMarkerAlt, faClock } from "@fortawesome/free-solid-svg-icons";
+import { getMainImageAdvertisement } from "../../actions/announcement";
 
-const AnnouncementItem = ({announcement, getMainImageAdvertisement}) => {
+const AnnouncementItem = ({ announcement, getMainImageAdvertisement }) => {
     const [image, setImage] = useState("");
     const [imageType, setImageType] = useState("");
-    moment().locale('pl');
+    moment().locale("pl");
 
     useEffect(() => {
         let mainImage = getMainImageAdvertisement(announcement._id);
@@ -38,7 +38,7 @@ const AnnouncementItem = ({announcement, getMainImageAdvertisement}) => {
                         <div className={"col-lg-3"}>
                             <img
                                 src={
-                                    "data:" + {imageType} + ";base64," + image
+                                    "data:" + { imageType } + ";base64," + image
                                 }
                                 alt={""}
                                 width={200}
@@ -53,14 +53,31 @@ const AnnouncementItem = ({announcement, getMainImageAdvertisement}) => {
                                 "d-flex flex-column justify-content-between col-lg-4"
                             }
                         >
-                            <p className={'text-right'}>{announcement.contactDetails[0].telephoneNumber + " " + "zł"}</p>
-                            <div>
-                                <FontAwesomeIcon icon={faMapMarkerAlt} className={'mr-1'} style={{'color': '#000099'}}/>
-                                <p className={'text-right d-inline mr-5'}>
-                                    {announcement.contactDetails[0].localization}
+                            <p className={"text-right"}>
+                                {announcement.price + "zł"}
+                            </p>
+                            <div className={"text-right"}>
+                                <FontAwesomeIcon
+                                    icon={faMapMarkerAlt}
+                                    className={"mr-1"}
+                                    style={{ color: "#000099" }}
+                                />
+                                <p className={"text-right d-inline mr-5"}>
+                                    {
+                                        announcement.contactDetails[0]
+                                            .localization
+                                    }
                                 </p>
-                                <FontAwesomeIcon icon={faClock} className={'mr-1'} style={{'color': '#000099'}}/>
-                                <p className={'d-inline'}>{moment(announcement.createdAt).format('ll')}</p>
+                                <FontAwesomeIcon
+                                    icon={faClock}
+                                    className={"mr-1"}
+                                    style={{ color: "#000099" }}
+                                />
+                                <p className={"d-inline"}>
+                                    {moment(announcement.createdAt).format(
+                                        "ll"
+                                    )}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -97,5 +114,5 @@ AnnouncementItem.propTypes = {};
 
 export default connect(
     null,
-    {getMainImageAdvertisement}
+    { getMainImageAdvertisement }
 )(AnnouncementItem);

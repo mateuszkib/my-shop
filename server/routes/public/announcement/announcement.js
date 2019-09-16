@@ -39,8 +39,8 @@ router.get("/image/:advertisementID", async (req, res) => {
     let image = await Image.find({
         announcementID: req.params.advertisementID
     });
-
     if (image) {
+        console.log(image);
         let mainImage = image.shift();
         if (mainImage) {
             let path =
