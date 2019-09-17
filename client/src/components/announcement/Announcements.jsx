@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {connect} from "react-redux";
-import {getAnnouncements} from "../../actions/announcement";
-import {Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { getAnnouncements } from "../../actions/announcement";
+import { Link } from "react-router-dom";
 import Alert from "../layouts/Alert";
 import AnnouncementItem from "./AnnouncementItem";
 
-const Announcement = ({getAnnouncements, match, announcements}) => {
+const Announcement = ({ getAnnouncements, match, announcements }) => {
     const category = match.params.category;
 
     useEffect(() => {
@@ -16,7 +16,7 @@ const Announcement = ({getAnnouncements, match, announcements}) => {
         <div className={"container"}>
             <div className={"row"}>
                 <div className={"col-lg-6 offset-lg-3"}>
-                    <Alert/>
+                    <Alert />
                 </div>
             </div>
             <div className={"row mt-5 justify-content-between"}>
@@ -38,11 +38,12 @@ const Announcement = ({getAnnouncements, match, announcements}) => {
                 <div className={"col-lg-12"}>
                     <div className="list-group">
                         {announcements.payload &&
-                        announcements.payload.map(announcement => (
-                            <AnnouncementItem
-                                announcement={announcement}
-                            />
-                        ))}
+                            announcements.payload.map(announcement => (
+                                <AnnouncementItem
+                                    key={announcement._id}
+                                    announcement={announcement}
+                                />
+                            ))}
                     </div>
                 </div>
             </div>
@@ -56,5 +57,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {getAnnouncements}
+    { getAnnouncements }
 )(Announcement);

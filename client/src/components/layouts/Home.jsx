@@ -4,23 +4,10 @@ import { connect } from "react-redux";
 import { getCategories } from "../../actions/category";
 import CategoryItem from "../categories/CategoryItem";
 
-const Home = ({ getCategories }) => {
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        const listCategories = getCategories();
-        listCategories.then(res => setCategories(res));
-    }, [getCategories]);
-
+const Home = () => {
     return (
         <div>
-            <div className="container-fluid">
-                <div className="row mt-5">
-                    {categories.map(category => (
-                        <CategoryItem key={category._id} category={category} />
-                    ))}
-                </div>
-            </div>
+            <div className="container-fluid home-baner"></div>
         </div>
     );
 };
