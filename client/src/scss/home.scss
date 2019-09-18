@@ -1,0 +1,29 @@
+@import "variables";
+
+.home-baner-container {
+    background-image: url(../img/baner-home.jpg);
+    height: 800px;
+    position: relative;
+
+    .text-container {
+        position: absolute;
+        top: 4%;
+        left: 30%;
+
+        .text-baner {
+            font-size: 75px;
+            color: $color-text-baner;
+        }
+    }
+
+    .button-down-container {
+        position: absolute;
+        top: 90%;
+        left: 50%;
+
+        .button-baner {
+            border: 1px solid $black;
+            padding: 10px 5px;
+        }
+    }
+}
