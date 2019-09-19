@@ -8,5 +8,5 @@ module.exports = {
     password: "MatMarket7ygv",
     salt: "s0mRIdlKvI",
     pathCategoryImage: "files/categories/",
-    pathAdvertisementImage: "files/advertisements/"
+    pathAdvertisementImage: "files/advertisements/",
 };

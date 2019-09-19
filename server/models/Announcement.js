@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Image = require("./Image");
 const Contact = require("./ContactDetail");
+const Thumb = require("./ThumbImageAnnouncement");
 
 const AdvertisementSchema = new Schema({
     userID: {
@@ -36,6 +36,7 @@ const AdvertisementSchema = new Schema({
         required: true
     },
     contactDetails: [Contact.schema],
+    thumb: [Thumb.schema],
     createdAt: {
         type: Date,
         default: Date.now
