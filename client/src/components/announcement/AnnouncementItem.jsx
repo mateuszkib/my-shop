@@ -14,7 +14,7 @@ const AnnouncementItem = ({announcement, getMainImageAdvertisement}) => {
 
     useEffect(() => {
         if (announcement) {
-            let mainImage = getMainImageAdvertisement(announcement._id);
+            let mainImage = getMainImageAdvertisement(announcement.thumb[0]._id);
             mainImage.then(image => {
                 if (image) {
                     const data = image.data;
@@ -30,7 +30,7 @@ const AnnouncementItem = ({announcement, getMainImageAdvertisement}) => {
                 }
             });
         }
-    }, [announcement]);
+    }, []);
 
     return (
         <div className="list-group mb-2">

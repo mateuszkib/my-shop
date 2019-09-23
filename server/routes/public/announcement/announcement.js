@@ -36,22 +36,10 @@ router.get("/:name", async (req, res) => {
 });
 
 router.get("/image/:advertisementID", async (req, res) => {
-    let image = await Image.find({
-        announcementID: req.params.advertisementID
+    let image = await Advertisement.find({
+        'thumb._id': req.params.advertisementID
     });
-    if (image) {
-        let mainImage = image.shift();
-        if (mainImage) {
-            let path =
-                process.cwd() +
-                "/" +
-                mainImage.folder +
-                "/" +
-                mainImage.fileName;
-
-            res.sendFile(path);
-        }
-    }
+    res.sendFile(process.cwd() + '/' + image[0].thumb[0].folder + '/' + image[0].thumb[0].fileName);
 });
 
 module.exports = router;

@@ -28,6 +28,10 @@ router.post("/add", auth, upload.any(), async (req, res) => {
     let category = await Category.find({name: req.body.category});
     let folder = config.pathAdvertisementImage + `${req.user.id}`;
     let files = req.files;
+    let thumbBuffer = fs.readFileSync(files[0].path);
+    let pathThumb = folder + '/thumbs/' + files[0].originalname;
+    let thumbName = files[0].originalname;
+    let tmp = 1;
 
     if (!empty(errors)) {
         return res.json({
@@ -60,7 +64,7 @@ router.post("/add", auth, upload.any(), async (req, res) => {
         case "1 miesiąc":
             expiredAdvert = expiredAdvert.setDate(expiredAdvert.getDate() + 31);
     }
-    console.log(req.body.type);
+
     const newAdvert = new Advertisement({
         userID: req.user.id,
         categoryID: category[0]._id,
@@ -79,29 +83,30 @@ router.post("/add", auth, upload.any(), async (req, res) => {
         telephoneNumber: req.body.number
     };
 
-    const newThumbImage = {
-        folder: folder + '/thumbs',
-        fileName: files[0].originalname,
-        fileType: files[0].mimetype,
-        type: "advert"
-    };
-    let img = fs.readFileSync(files[0].path);
-
-
     await mkdirp(folder);
-    console.log(folder + '/thumbs/');
-    await sharp(img).resize({
-        width: 200,
-        height: 200
-    }).toFile(folder + '/thumbs/' + files[0].originalname).then(data => {
-        console.log('tworze miniaturke');
-    })
+    while (fs.existsSync(pathThumb)) {
+        pathThumb = folder + '/thumbs/' + "(" + tmp + ")" + files[0].originalname;
+        thumbName = "(" + tmp + ")" + files[0].originalname;
+        tmp++;
+    }
+    await sharp(thumbBuffer)
+        .resize({
+            width: 200,
+            height: 150
+        })
+        .toFile(pathThumb)
+        .then(() => {
+            const newThumbImage = {
+                folder: folder + '/thumbs',
+                fileName: thumbName,
+                fileType: files[0].mimetype,
+                type: "advert"
+            };
+            newAdvert.thumb = newThumbImage;
+        })
         .catch(err => {
-            console.log('error')
             console.log(err)
         });
-
-    newAdvert.thumb = newThumbImage;
 
     newAdvert
         .save()
@@ -153,10 +158,10 @@ router.post("/add", auth, upload.any(), async (req, res) => {
 
                 newFile.save();
             });
-            // res.json({
-            //     success: true,
-            //     msg: "Advertisement successfully added"
-            // });
+            res.json({
+                success: true,
+                msg: "Advertisement successfully added"
+            });
         })
         .catch(err => {
             console.log(err);
