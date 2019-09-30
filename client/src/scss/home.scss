@@ -1,29 +1,43 @@
 @import "variables";
 
 .home-baner-container {
-    background-image: url(../img/baner-home.jpg);
-    height: 800px;
-    position: relative;
+  background: url(../images/baner-home.jpg) center;
+  background-size: cover;
+  height: 800px;
+  position: relative;
 
-    .text-container {
-        position: absolute;
-        top: 4%;
-        left: 30%;
+  .text-container {
+    position: absolute;
+    font-family: 'Turret Road', cursive;
+    top: 15%;
+    left: 30%;
 
-        .text-baner {
-            font-size: 75px;
-            color: $color-text-baner;
-        }
+    .text-baner {
+      font-size: 80px;
+      color: $black;
     }
+  }
 
-    .button-down-container {
-        position: absolute;
-        top: 90%;
-        left: 50%;
+  .button-down-container {
+    position: absolute;
+    top: 90%;
+    left: 50%;
 
-        .button-baner {
-            border: 1px solid $black;
-            padding: 10px 5px;
+    .button-baner {
+      border: 1px solid #333333;
+      padding: 15px 10px;
+      transition: all 2s;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #333333;
+        opacity: 0.4;
+
+        .fa-arrow-down {
+          color: $white !important;
+          transition-delay: 0.5s;
         }
+      }
     }
+  }
 }

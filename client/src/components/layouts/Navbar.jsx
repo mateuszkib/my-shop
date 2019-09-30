@@ -12,12 +12,12 @@ const Navbar = ({user, logout}) => {
 
     const notAuthNavbar = (
         <ul className="navbar-nav ml-auto">
-            <li className="nav-item active">
+            <li className="nav-item">
                 <Link to="/register" className="nav-link">
                     Rejestracja
                 </Link>
             </li>
-            <li className="nav-item active">
+            <li className="nav-item">
                 <Link to="/login" className="nav-link">
                     Logowanie
                 </Link>
@@ -27,7 +27,7 @@ const Navbar = ({user, logout}) => {
 
     const authNavbar = (
         <ul className="navbar-nav ml-auto">
-            <li className="nav-item active">
+            <li className="nav-item ">
                 <Link to="/profile" className="nav-link">
                     {user && (
                         <img
@@ -41,7 +41,7 @@ const Navbar = ({user, logout}) => {
                     Profil
                 </Link>
             </li>
-            <li className="nav-item active">
+            <li className="nav-item">
                 <Link
                     to="/logout"
                     className="nav-link"
@@ -55,7 +55,7 @@ const Navbar = ({user, logout}) => {
 
     return (
         <Fragment>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <nav className="navbar navbar-expand-lg navbar-light">
                 <Link to="/">
                     <img className={"logo"} src={logo} alt={logo}/>
                 </Link>
@@ -72,7 +72,7 @@ const Navbar = ({user, logout}) => {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav mr-auto">
-                        <li className="nav-item active">
+                        <li className="nav-item">
                             <Link to="/" className="nav-link">
                                 Strona główna <span className="sr-only">(current)</span>
                             </Link>
